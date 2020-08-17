@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">dailycook</string>
+    <string name="login_hint_username_text">Email</string>
 </resources>
