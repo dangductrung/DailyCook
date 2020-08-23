@@ -123,8 +123,9 @@
                     android:layout_height="wrap_content"
                     android:text="Đăng ký"
                     android:clickable="true"
-                    
+                    android:focusable="true"
                     android:textColor="@color/bg_blue"
+                    android:id="@+id/text_register"
                     />
             </LinearLayout>
 

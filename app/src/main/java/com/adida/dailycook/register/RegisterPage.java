@@ -1,4 +1,6 @@
-package com.adida.dailycook.login;
+package com.adida.dailycook.register;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -6,36 +8,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.adida.dailycook.R;
-import com.adida.dailycook.register.RegisterPage;
+import com.adida.dailycook.login.LoginPage;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class LoginPage extends AppCompatActivity {
-    TextInputEditText email, pass;
+public class RegisterPage extends AppCompatActivity {
+    TextInputEditText email, pass, repass;
     Button login;
-    TextView register;
-    Intent signupIntent;
+    TextView signin;
+    Intent signinIntent;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.activivity_login);
+        setContentView(R.layout.activity_register);
 
         email = findViewById(R.id.edit_email);
         pass = findViewById(R.id.edit_password);
+        repass = findViewById(R.id.re_password);
         login = findViewById(R.id.btn_login);
-        register = findViewById(R.id.text_register);
-        signupIntent = new Intent(this, RegisterPage.class);
+        signin = findViewById(R.id.text_signin);
+        signinIntent = new Intent(this, LoginPage.class);
 
         setupEditTextListen();
     }
@@ -64,10 +62,19 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
-        register.setOnTouchListener(new View.OnTouchListener() {
+        repass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        signin.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                startActivity(signupIntent);
+                startActivity(signinIntent);
                 return true;
             }
         });
