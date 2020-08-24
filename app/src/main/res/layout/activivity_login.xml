@@ -6,7 +6,7 @@
     android:weightSum="3"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".login.LoginPage"
-    android:background="@color/bg_blue"
+    android:background="@color/colorBlue"
     android:id="@+id/login_parent"
     android:clickable="true"
     android:focusableInTouchMode="true"
@@ -16,7 +16,7 @@
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_weight="3"
-        android:background="@color/bg_blue"
+        android:background="@color/colorBlue"
         android:src="@mipmap/logo_app"
         android:layout_gravity="center"
          />
@@ -124,7 +124,7 @@
                     android:text="Đăng ký"
                     android:clickable="true"
                     android:focusable="true"
-                    android:textColor="@color/bg_blue"
+                    android:textColor="@color/colorBlue"
                     android:id="@+id/text_register"
                     />
             </LinearLayout>

@@ -1,6 +1,7 @@
 package com.adida.dailycook.Main.HomepageFragment.HomepageRecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.recipeDetail.RecipeDetailPage;
 import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -47,12 +49,14 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         if (viewHolder instanceof ItemViewHolder) {
-            ItemViewHolder holder = (ItemViewHolder) viewHolder;
+            final ItemViewHolder holder = (ItemViewHolder) viewHolder;
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(view.getContext(), RecipeDetailPage.class);
+                    intent.putExtra("id", list.get(holder.getPosition()).getRecipeDetail().getId());
+                    view.getContext().startActivity(intent);
                 }
             });
 

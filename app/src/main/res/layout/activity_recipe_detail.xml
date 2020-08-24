@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".recipeDetail.RecipeDetailPage"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/colorPureWhite">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,14 +15,14 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:background="@color/white">
+        android:background="@color/colorPureWhite">
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@mipmap/back_button"
             android:layout_marginLeft="10dp"
             android:id="@+id/btnBackButton"
-            android:background="@color/white"
+            android:background="@color/colorPureWhite"
             />
         <TextView
             android:layout_width="match_parent"
@@ -29,8 +30,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="25dp"
-            android:textColor="@color/black"
-            android:text="Tên đồ ăn"
+            android:textColor="@color/colorBlack"
             android:id="@+id/RecipeTitle"></TextView>
         <ImageButton
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:src="@mipmap/like_button"
             android:layout_marginLeft="10dp"
             android:id="@+id/btnLikeButton"
-            android:background="@color/white"
+            android:background="@color/colorPureWhite"
             />
     </LinearLayout>
 
@@ -46,13 +46,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:background="@color/white">
+        android:background="@color/colorPureWhite">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/white">
+            android:background="@color/colorPureWhite">
 
             <ImageView
                 android:id="@+id/RecipeImage"
@@ -60,7 +60,7 @@
                 android:layout_height="325dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/white"
+                android:background="@color/colorPureWhite"
                 android:src="@mipmap/logo_app" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Nguyên liệu"
-                android:textColor="@color/black"
+                android:textColor="@color/colorBlack"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -85,18 +85,11 @@
                 card_view:contentPadding="10dp"
                 >
 
-                <TextView
-                    android:id="@+id/CredientRecipeDetail"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/IngredientRecipeDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/shadow"
-                    android:gravity="left"
-                    android:lines="8"
-                    android:maxLines="8"
-                    android:padding="16dp"
-                    android:scrollbars="vertical"
-                    android:text="test\ncác nguyên liệu\ntest\n\nghi nguyên liệu" />
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             </androidx.cardview.widget.CardView>
 
 
@@ -106,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Các bước"
-                android:textColor="@color/black"
+                android:textColor="@color/colorBlack"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -121,17 +114,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 card_view:contentPadding="10dp">
-                <TextView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/StepRecipeDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="left"
-                    android:lines="8"
-                    android:maxLines="8"
-                    android:padding="16dp"
-                    android:text="test\ncác nguyên liệu\ntest\n\nghi nguyên liệu"
-                    android:scrollbars = "vertical"/>
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             </androidx.cardview.widget.CardView>
 
             <Button
@@ -142,7 +129,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPureWhite"
                 android:text="Bắt Đầu"
                 android:textSize="14dp"
                 android:background="@drawable/round_button"/>
