@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.retrofit2.entities.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,23 +23,22 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private final int VIEW_TYPE_ITEM_LOADING = 1;
     private final int ITEMS_LIMIT = 10;
 
-    private Context m_context;
-    private List<HomepageModel> m_recipeList;
+    private Context context;
+    private List<Recipe> list;
 
-    public HomepageRecyclerViewAdapter(Context context, List<HomepageModel> recipeList){
-        m_context = context;
-        m_recipeList = recipeList;
+    public HomepageRecyclerViewAdapter(Context context, List<Recipe> list) {
+        this.context = context;
+        this.list = list;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
-            View view = LayoutInflater.from(m_context).inflate(R.layout.homepage_recyclerview, parent, false);
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(context).inflate(R.layout.homepage_recyclerview, parent, false);
             return new ItemViewHolder(view);
-        }
-        else{
-            View view = LayoutInflater.from(m_context).inflate(R.layout.item_loading, parent, false);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
             return new LoadingViewHolder(view);
         }
     }
@@ -45,7 +46,7 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
-        if(viewHolder instanceof ItemViewHolder){
+        if (viewHolder instanceof ItemViewHolder) {
             ItemViewHolder holder = (ItemViewHolder) viewHolder;
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -55,17 +56,17 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
             });
 
-            final HomepageModel currentRecipe = m_recipeList.get(position);
-            holder.recipeName.setText(currentRecipe.getRecipeName());
-            holder.uploader.setText(currentRecipe.getUsername());
+            final Recipe currentRecipe = list.get(position);
+            holder.recipeName.setText(currentRecipe.getRecipeDetail().getName());
+            holder.uploader.setText(currentRecipe.getChef().getName());
+            try {
+                Picasso.get().setLoggingEnabled(true);
+                Picasso.get().load(currentRecipe.getRecipeDetail().getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(holder.recipeImage);
+            }catch (Exception e) {
+                holder.recipeImage.setImageAlpha(R.drawable.ic_error);
+            }
 
-//        Picasso.get().setLoggingEnabled(true);
-            //Picasso.get().load(currentRecipe.getRecipe().getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(holder.foodPortrait);
-            //Picasso.get().load(currentRecipe.getChef().getAvatar()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(holder.userAvatar);
-
-
-        }
-        else if(viewHolder instanceof LoadingViewHolder){
+        } else if (viewHolder instanceof LoadingViewHolder) {
             LoadingViewHolder holder = (LoadingViewHolder) viewHolder;
         }
     }
@@ -73,20 +74,20 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() {
 //        return m_recipeList == null ? 0 : m_recipeList.size() > ITEMS_LIMIT ? ITEMS_LIMIT : m_recipeList.size();
-        return m_recipeList == null ? 0 : m_recipeList.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return m_recipeList.get(position) == null ? VIEW_TYPE_ITEM_LOADING : VIEW_TYPE_ITEM;
+        return list.get(position) == null ? VIEW_TYPE_ITEM_LOADING : VIEW_TYPE_ITEM;
     }
 
 
-    public int getItemLimit(){
+    public int getItemLimit() {
         return this.ITEMS_LIMIT;
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder{
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
         private ImageView recipeImage;
         private TextView recipeName;
         private TextView uploader;
@@ -99,7 +100,7 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder{
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
 
         private ProgressBar prbarItemLoading;
 

@@ -1,5 +1,6 @@
 package com.adida.dailycook.Main.HomepageFragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -7,16 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adida.dailycook.Main.HomepageFragment.HomepageRecyclerView.HomepageModel;
 import com.adida.dailycook.Main.HomepageFragment.HomepageRecyclerView.HomepageRecyclerViewAdapter;
 import com.adida.dailycook.R;
+import com.adida.dailycook.retrofit2.ServiceManager;
+import com.adida.dailycook.retrofit2.entities.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -30,18 +36,15 @@ public class HomepageFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private final int ITEMS_LIMIT = 10;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private List<HomepageModel> homepageModelList;
-    private final int ITEMS_LIMIT = 10;
-
-    private RecyclerView homepageRecyclerView;
+    private List<Recipe> itemList;
+    private RecyclerView recyclerView;
     private boolean isItemLoading = false;
     private int page = 0;
-    private HomepageRecyclerViewAdapter homepageRecyclerViewAdapter;
+    private HomepageRecyclerViewAdapter recyclerViewAdapter;
 
 
     public HomepageFragment() {
@@ -80,29 +83,50 @@ public class HomepageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.homepage_fragment, container, false);
-        homepageRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewRecipeHomepage);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewRecipeHomepage);
         getHomeData();
         return view;
     }
 
-    private void getHomeData(){
-        homepageModelList = new ArrayList<HomepageModel>();
-        homepageModelList.add(new HomepageModel("Phở Hà Nội Tại Gia", "Nguyễn Phi Thăng"));
-        homepageModelList.add(new HomepageModel("Phở Hà Nội Tại Quán", "Nguyễn Thăng Thiên"));
-        homepageModelList.add(new HomepageModel("Phở Hà Nội Tại Tiệm", "Nguyễn Thăng Hoa"));
-        homepageModelList.add(new HomepageModel("Phở Hà Nội Tại Trường", "Nguyễn Phi Thiên"));
-        homepageModelList.add(new HomepageModel("Phở Hà Nội Tại Ga", "Nguyễn Phi Phàm"));
+    private void getHomeData() {
+        ServiceManager.getInstance().getRecipeService().getAllRecipes(page).enqueue(new Callback<List<Recipe>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                if (page == 0) {
+                    itemList = response.body();
+                    initScrollListener();
 
-        setRecipeHomeAdapter();
+                    setRecipeHomeAdapter();
+                } else {
+                    if (response.body() != null) {
+                        itemList.addAll(response.body());
+                        recyclerViewAdapter.notifyDataSetChanged();
+                        isItemLoading = false;
+                    }
+                }
+
+                if (response.body() == null) {
+                    recyclerView.clearOnScrollListeners();
+                } else {
+                    page += 1;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+
+            }
+        });
     }
 
     private void setRecipeHomeAdapter() {
-        homepageRecyclerViewAdapter = new HomepageRecyclerViewAdapter(getActivity(), homepageModelList);
-        homepageRecyclerView.setAdapter(homepageRecyclerViewAdapter);
+        recyclerViewAdapter = new HomepageRecyclerViewAdapter(getActivity(), itemList);
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void initScrollListener(){
-        homepageRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -114,40 +138,29 @@ public class HomepageFragment extends Fragment {
 
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                if(linearLayoutManager != null){
-                    if(!isItemLoading){
-                        if(linearLayoutManager.findLastCompletelyVisibleItemPosition() == homepageModelList.size() - 1){
-                            loadMore();
-                            isItemLoading = true;
-                        }
+                if (!isItemLoading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == itemList.size() - 1) {
+                        //bottom of list!
+                        loadMore();
+                        isItemLoading = true;
                     }
                 }
             }
         });
     }
 
-    public void loadMore(){
-        homepageModelList.add(null);
-        homepageRecyclerViewAdapter.notifyItemInserted(homepageModelList.size() - 1);
+    public void loadMore() {
+        itemList.add(null);
+        recyclerViewAdapter.notifyItemInserted(itemList.size() - 1);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                homepageModelList.remove(homepageModelList.size() - 1);
-                int scrollPosition = homepageModelList.size();
-                homepageRecyclerViewAdapter.notifyItemRemoved(scrollPosition);
-                int currentSize = scrollPosition;
-                int nextLimit = currentSize + homepageRecyclerViewAdapter.getItemLimit();
+                itemList.remove(itemList.size() - 1);
+                recyclerViewAdapter.notifyItemRemoved(itemList.size());
 
-                while (currentSize - 1 < nextLimit) {
-                    getHomeData();
-
-                    currentSize++;
-                }
-
-                homepageRecyclerViewAdapter.notifyDataSetChanged();
-                isItemLoading = false;
+                getHomeData();
             }
         }, 2000);
     }
