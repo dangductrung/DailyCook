@@ -35,7 +35,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/textViewFirstNameHomepage"
-                    android:text="Thăng"
                     android:textSize="24dp"
                     android:textColor="@color/colorBlack"
                     />
@@ -46,7 +45,6 @@
                 android:layout_height="match_parent"
                 android:id="@+id/textViewDateHomepage"
                 android:layout_weight="9.9"
-                android:text="July 20th, 202"
                 android:textSize="14dp"
                 android:paddingTop="9dp"
                 />
@@ -54,7 +52,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/buttonSignoutHomepage"
+            android:id="@+id/imageButtonSignoutHomepage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
