@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".recipeDetail.RecipeDetailPage"/>
         <activity android:name=".register.RegisterPage"></activity>
         <activity android:name=".login.LoginPage"></activity>
     </application>
