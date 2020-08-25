@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 public class RecipeProfileAdapter extends RecyclerView.Adapter<RecipeProfileAdapter.RecipeViewHolder> {
 
-    String[] m_recipeList = new String[]{"1", "2", "3", "4"};
+    String[] m_recipeList = new String[]{"1", "2", "3", "4", "5", "6", "7"};
 
     public RecipeProfileAdapter(){
     }

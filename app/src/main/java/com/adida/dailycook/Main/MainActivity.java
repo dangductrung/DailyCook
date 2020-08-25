@@ -3,28 +3,35 @@ package com.adida.dailycook.Main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.adida.dailycook.Main.HomepageFragment.HomepageFragment;
 import com.adida.dailycook.PagerAdapter.PagerAdapter;
+import com.adida.dailycook.Profile.ProfileActivity;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
 import com.adida.dailycook.login.LoginPage;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private Intent loginIntent;
     private PagerAdapter tabAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPagerHomePage);
         tabLayout = findViewById(R.id.tabLayoutHomepage);
+        navigationView = findViewById(R.id.navigation);
         setView();
 
 
@@ -53,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        navigationView.setOnNavigationItemSelectedListener(this);
+
         LoadHomepageData();
     }
-
 
 
     private void highLightCurrentTab(int position) {
@@ -107,4 +116,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.navigation_profile){
+            startActivity(new Intent(this, ProfileActivity.class));
+        }
+
+        return false;
+    }
 }

@@ -105,8 +105,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/colorWhite"
         android:foreground="?attr/selectableItemBackground"
+        app:itemBackground="@color/colorWhite"
         app:itemIconTint="@android:color/black"
         app:itemTextColor="@android:color/black"
         app:menu="@menu/navigation" />
