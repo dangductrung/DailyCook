@@ -1,6 +1,7 @@
 package com.adida.dailycook.recipeDetail;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.adida.dailycook.R;
 import com.adida.dailycook.recipeDetail.IngredientRecyclerView.IngredientRecyclerViewAdapter;
 import com.adida.dailycook.recipeDetail.StepRecyclerView.StepRecyclerViewAdapter;
+import com.adida.dailycook.recipeSteps.RecipeSteps;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 import com.squareup.picasso.Picasso;
@@ -95,7 +97,8 @@ public class RecipeDetailPage extends AppCompatActivity {
     }
 
     private void didTapStartButton() {
-        finish();
+        Intent intent = new Intent(this, RecipeSteps.class);
+        startActivity(intent);
     }
 
     private void LoadData() {
