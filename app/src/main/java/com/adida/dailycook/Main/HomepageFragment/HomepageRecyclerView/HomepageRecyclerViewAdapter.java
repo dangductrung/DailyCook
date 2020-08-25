@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
 import com.adida.dailycook.recipeDetail.RecipeDetailPage;
+import com.adida.dailycook.retrofit2.entities.Chef;
 import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.squareup.picasso.Picasso;
 

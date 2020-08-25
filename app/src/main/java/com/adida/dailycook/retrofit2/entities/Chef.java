@@ -4,21 +4,24 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Chef {
-    @SerializedName("username_name")
+    @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("username_age")
+    @SerializedName("age")
     @Expose
     private int age;
-    @SerializedName("username_email")
+    @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("username_avatar_url")
+    @SerializedName("avatar")
     @Expose
     private String avatar;
     @SerializedName("user_gender")
     @Expose
     private String gender;
+    @SerializedName("id")
+    @Expose
+    private int id;
 
     public void setName(String name) {this.name = name;};
     public String getName() {return this.name;};
@@ -35,4 +38,6 @@ public class Chef {
     public String getGender() {return gender;}
 
     public void setGender(String gender) {this.gender = gender;}
+    public void setId(int id) {this.id = id;}
+    public int getId() {return this.id;}
 }
