@@ -1,6 +1,7 @@
 package com.adida.dailycook.retrofit2;
 
 import com.adida.dailycook.config.Config;
+import com.adida.dailycook.retrofit2.services.RecipeService;
 import com.adida.dailycook.retrofit2.services.UserService;
 
 import retrofit2.Retrofit;
@@ -27,5 +28,9 @@ public class ServiceManager {
 
     public UserService getUserService() {
         return retrofit.create(UserService.class);
+    }
+
+    public RecipeService getRecipeService() {
+        return retrofit.create(RecipeService.class);
     }
 }

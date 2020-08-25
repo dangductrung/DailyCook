@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:weightSum="3"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".login.LoginPage"
+    tools:context=".register.RegisterPage"
     android:background="@color/colorBlue"
     android:id="@+id/login_parent"
     android:clickable="true"
@@ -19,7 +19,7 @@
         android:background="@color/colorBlue"
         android:src="@mipmap/logo_app"
         android:layout_gravity="center"
-         />
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đăng Nhập"
+                android:text="Đăng Ký"
                 android:textAlignment="center"
                 android:textSize="32dp"
                 android:textStyle="bold"
@@ -66,7 +66,7 @@
                     android:hint="@string/login_hint_username_text"
                     android:inputType="text"
                     android:background="@android:color/transparent"
-                    android:id="@+id/login_edit_email"
+                    android:id="@+id/edit_email"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +76,28 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/border_radius_all"
-                android:hint="@string/login_hint_password_text"
+                android:hint="Mật khẩu"
+                app:startIconDrawable="@mipmap/ic_lock"
+                android:paddingLeft="16dp"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="30dp"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/edit_password"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/border_radius_all"
+                android:hint="Nhập lại mật khẩu"
                 app:startIconDrawable="@mipmap/ic_lock"
                 android:paddingLeft="16dp"
                 android:paddingBottom="8dp"
@@ -87,7 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:id="@+id/login_edit_password"
+                    android:id="@+id/re_password"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,10 +120,10 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/border_radius_all_blue"
-                android:text="Đăng Nhập"
+                android:text="Đăng Ký"
                 android:textStyle="bold"
                 android:textColor="@color/colorPureWhite"
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_register"
                 />
 
             <LinearLayout
@@ -115,17 +136,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bạn chưa có tài khoản? "
+                    android:text="Bạn đã có tài khoản? "
 
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đăng ký"
+                    android:text="Đăng nhập"
                     android:clickable="true"
                     android:focusable="true"
                     android:textColor="@color/colorBlue"
-                    android:id="@+id/text_register"
+                    android:id="@+id/text_signin"
                     />
             </LinearLayout>
 
