@@ -31,7 +31,7 @@ public class RecipeDetailPage extends AppCompatActivity {
     ImageButton backButton, likeButton;
     ImageView recipeImage;
     RecyclerView ingredientRecipeDetail , stepRecipeDetail;
-    TextView recipeTitle;
+    TextView recipeTitle, descriptionRecipe;
     Button startButton;
     RecipeDetail detail;
     ProgressDialog progressDialog;
@@ -51,6 +51,7 @@ public class RecipeDetailPage extends AppCompatActivity {
         ingredientRecipeDetail = findViewById(R.id.IngredientRecipeDetail);
         recipeTitle = findViewById(R.id.RecipeTitle);
         stepRecipeDetail = findViewById(R.id.StepRecipeDetail);
+        descriptionRecipe = (TextView)findViewById(R.id.CredientRecipeInformation);
         startButton = (Button) findViewById(R.id.startButton);
 
         LoadData();
@@ -118,6 +119,8 @@ public class RecipeDetailPage extends AppCompatActivity {
 
                     stepRecipeDetail.setAdapter(new StepRecyclerViewAdapter(getApplicationContext(), detail.getSteps()));
                     stepRecipeDetail.setLayoutManager(new LinearLayoutManager(getApplicationContext().getApplicationContext()));
+
+                    descriptionRecipe.setText(detail.getDescription());
 
                     progressDialog.dismiss();
                 }

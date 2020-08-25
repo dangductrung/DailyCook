@@ -12,4 +12,5 @@
     <color name="colorLight_TextFont">#FBFBFB</color>
     <color name="colorGrey_TextFont">#ff9e9e9e</color>
     <color name="colorTextShadow">#7F000000</color>
+    <color name="colorTextBlack">#333333</color>
 </resources>

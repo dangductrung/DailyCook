@@ -63,6 +63,26 @@
                 android:background="@color/colorPureWhite"
                 android:src="@mipmap/logo_app" />
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardUseCompatPadding="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                card_view:contentPadding="10dp"
+                >
+                <TextView
+                    android:id="@+id/CredientRecipeInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/colorTextBlack"
+                    />
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
