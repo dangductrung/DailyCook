@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".recipeSteps.RecipeSteps"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
         <activity android:name=".Main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,12 +22,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
         <activity android:name=".login.LoginPage">
         </activity>
         <activity android:name=".recipeDetail.RecipeDetailPage"></activity>
         <activity android:name=".register.RegisterPage"></activity>
-        <activity android:name=".login.LoginPage"></activity>
+
     </application>
 
 </manifest>
