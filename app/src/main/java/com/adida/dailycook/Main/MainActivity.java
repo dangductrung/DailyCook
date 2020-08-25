@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         });
 
+        //DEMO
         navigationView.setOnNavigationItemSelectedListener(this);
 
         LoadHomepageData();
