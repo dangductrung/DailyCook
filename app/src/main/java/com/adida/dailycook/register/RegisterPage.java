@@ -149,8 +149,7 @@ public class RegisterPage extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
                 Toast.makeText(getApplicationContext(), "Register successful", Toast.LENGTH_SHORT).show();
-                ///TODO: Open Homepage
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                startActivity(signinIntent);
                 progressDialog.dismiss();
             }
 

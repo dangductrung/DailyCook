@@ -15,7 +15,7 @@ public interface UserService {
     @GET("/user")
     Call<User> getUserInformation();
 
-    @GET("/user/")
+    @GET("/user/name")
     Call<User> getUserByName(@Query("username") String name);
 
     @GET("/user/")
