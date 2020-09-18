@@ -1,4 +1,4 @@
-package com.adida.dailycook.Profile;
+package com.adida.dailycook.Main.Fragment.Profile;
 
 import android.view.LayoutInflater;
 import android.view.View;

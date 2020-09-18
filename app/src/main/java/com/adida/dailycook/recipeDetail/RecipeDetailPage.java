@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.SharedPreference.SharedPreference;
+import com.adida.dailycook.config.Config;
 import com.adida.dailycook.recipeDetail.IngredientRecyclerView.IngredientRecyclerViewAdapter;
 import com.adida.dailycook.recipeDetail.StepRecyclerView.StepRecyclerViewAdapter;
 import com.adida.dailycook.recipeSteps.RecipeSteps;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
+import com.adida.dailycook.retrofit2.entities.RecipeDetailSteps;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -35,7 +38,7 @@ public class RecipeDetailPage extends AppCompatActivity {
     RecyclerView ingredientRecipeDetail , stepRecipeDetail;
     TextView recipeTitle, descriptionRecipe;
     Button startButton;
-    RecipeDetail detail;
+    RecipeDetailSteps detail;
     ProgressDialog progressDialog;
 
     @Override
@@ -102,17 +105,17 @@ public class RecipeDetailPage extends AppCompatActivity {
     }
 
     private void LoadData() {
-        ServiceManager.getInstance().getRecipeService().getRecipeDetail(recipeID).enqueue(new Callback<RecipeDetail>() {
+        ServiceManager.getInstance().getRecipeService().getRecipeSteps(recipeID, SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).get(Config.SHARED_PREFERENCES.USER.ID, int.class)).enqueue(new Callback<RecipeDetailSteps>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void onResponse(Call<RecipeDetail> call, Response<RecipeDetail> response) {
+            public void onResponse(Call<RecipeDetailSteps> call, Response<RecipeDetailSteps> response) {
                 if (response.body() != null) {
                     detail = response.body();
-                    recipeTitle.setText(detail.getName());
+                    recipeTitle.setText(detail.getRecipe().getRecipeName());
 
                     try {
                         Picasso.get().setLoggingEnabled(true);
-                        Picasso.get().load(detail.getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(recipeImage);
+                        Picasso.get().load(detail.getRecipe().getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(recipeImage);
                     } catch (Exception e) {
                         recipeImage.setImageAlpha(R.drawable.ic_error);
                     }
@@ -123,7 +126,7 @@ public class RecipeDetailPage extends AppCompatActivity {
                     stepRecipeDetail.setAdapter(new StepRecyclerViewAdapter(getApplicationContext(), detail.getSteps()));
                     stepRecipeDetail.setLayoutManager(new LinearLayoutManager(getApplicationContext().getApplicationContext()));
 
-                    descriptionRecipe.setText(detail.getDescription());
+                    descriptionRecipe.setText(detail.getRecipe().getDescription());
 
                     progressDialog.dismiss();
                 }
@@ -131,7 +134,7 @@ public class RecipeDetailPage extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RecipeDetail> call, Throwable t) {
+            public void onFailure(Call<RecipeDetailSteps> call, Throwable t) {
 
             }
         });

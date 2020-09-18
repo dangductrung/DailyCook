@@ -1,4 +1,4 @@
-package com.adida.dailycook.Main.HomepageFragment.HomepageRecyclerView;
+package com.adida.dailycook.Main.Fragment.Home.RecipeHomeRecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,22 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
 import com.adida.dailycook.recipeDetail.RecipeDetailPage;
-import com.adida.dailycook.retrofit2.entities.Chef;
-import com.adida.dailycook.retrofit2.entities.Recipe;
+import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecipeHomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_ITEM_LOADING = 1;
     private final int ITEMS_LIMIT = 10;
 
     private Context context;
-    private List<Recipe> list;
+    private List<RecipeDetail> list;
 
-    public HomepageRecyclerViewAdapter(Context context, List<Recipe> list) {
+    public RecipeHomeRecyclerViewAdapter(Context context, List<RecipeDetail> list) {
         this.context = context;
         this.list = list;
     }
@@ -56,17 +55,17 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), RecipeDetailPage.class);
-                    intent.putExtra("id", list.get(holder.getPosition()).getRecipeDetail().getId());
+                    intent.putExtra("id", list.get(holder.getPosition()).getRecipe().getRecipeId());
                     view.getContext().startActivity(intent);
                 }
             });
 
-            final Recipe currentRecipe = list.get(position);
-            holder.recipeName.setText(currentRecipe.getRecipeDetail().getName());
+            final RecipeDetail currentRecipe = list.get(position);
+            holder.recipeName.setText(currentRecipe.getRecipe().getRecipeName());
             holder.uploader.setText(currentRecipe.getChef().getName());
             try {
                 Picasso.get().setLoggingEnabled(true);
-                Picasso.get().load(currentRecipe.getRecipeDetail().getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(holder.recipeImage);
+                Picasso.get().load(currentRecipe.getRecipe().getImageUrl()).error(R.drawable.ic_error).placeholder(R.drawable.ic_placeholder).into(holder.recipeImage);
             }catch (Exception e) {
                 holder.recipeImage.setImageAlpha(R.drawable.ic_error);
             }
@@ -78,7 +77,6 @@ public class HomepageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-//        return m_recipeList == null ? 0 : m_recipeList.size() > ITEMS_LIMIT ? ITEMS_LIMIT : m_recipeList.size();
         return list == null ? 0 : list.size();
     }
 

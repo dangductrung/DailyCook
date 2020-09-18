@@ -8,14 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.adida.dailycook.R;
-import com.adida.dailycook.retrofit2.entities.Step;
+import com.adida.dailycook.retrofit2.entities.RecipeStep;
+
 import java.util.List;
 
 public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerViewAdapter.ViewHolder> {
     private Context context;
-    private List<Step> models;
+    private List<RecipeStep> models;
 
-    public StepRecyclerViewAdapter(Context context, List<Step> models) {
+    public StepRecyclerViewAdapter(Context context, List<RecipeStep> models) {
         this.context = context;
         this.models = models;
     }
@@ -31,10 +32,10 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Step model = models.get(position);
+        RecipeStep model = models.get(position);
 
-        holder.orderTextView.setText(Integer.toString(model.getOrder()));
-        holder.descriptionTextView.setText(model.getDescription());
+        holder.orderTextView.setText(Integer.toString(model.getStep_Order()));
+        holder.descriptionTextView.setText(model.getStep_description());
     }
 
     @Override

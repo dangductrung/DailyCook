@@ -8,13 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.adida.dailycook.R;
+import com.adida.dailycook.retrofit2.entities.Ingredient;
+
 import java.util.List;
 
 public class IngredientRecyclerViewAdapter extends RecyclerView.Adapter<IngredientRecyclerViewAdapter.ViewHolder> {
     private Context context;
-    private List<String> models;
+    private List<Ingredient> models;
 
-    public IngredientRecyclerViewAdapter(Context context, List<String> models) {
+    public IngredientRecyclerViewAdapter(Context context, List<Ingredient> models) {
         this.context = context;
         this.models = models;
     }
@@ -30,8 +32,8 @@ public class IngredientRecyclerViewAdapter extends RecyclerView.Adapter<Ingredie
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String model = models.get(position);
-        holder.description.setText(model);
+        Ingredient model = models.get(position);
+        holder.description.setText(model.getIngredient());
     }
 
     @Override
