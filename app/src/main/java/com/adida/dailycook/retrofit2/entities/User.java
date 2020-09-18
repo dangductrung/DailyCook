@@ -4,35 +4,35 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
-    @SerializedName("id")
+    @SerializedName("user_id")
     @Expose
-    private int id;
-    @SerializedName("name")
+    private Integer id;
+    @SerializedName("user_name")
     @Expose
     private String name;
-    @SerializedName("email")
+    @SerializedName("user_age")
+    @Expose
+    private Integer age;
+    @SerializedName("user_gender")
+    @Expose
+    private Integer gender;
+    @SerializedName("user_email")
     @Expose
     private String email;
-    @SerializedName("age")
+    @SerializedName("user_avatar_url")
     @Expose
-    private int age;
+    private String avatar;
 
-    public User(int id, String name, String email, int age) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.age = age;
-    }
+    @SerializedName("rate")
+    @Expose
+    private float rate;
 
-    public User() {
 
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -44,6 +44,14 @@ public class User {
         this.name = name;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -52,11 +60,27 @@ public class User {
         this.email = email;
     }
 
-    public int getAge() {
-        return age;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
     }
 }

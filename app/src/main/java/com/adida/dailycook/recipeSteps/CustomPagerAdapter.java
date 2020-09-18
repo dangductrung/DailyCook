@@ -1,9 +1,6 @@
 package com.adida.dailycook.recipeSteps;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +12,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.retrofit2.entities.RecipeStep;
 import com.squareup.picasso.Picasso;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomPagerAdapter extends PagerAdapter {
@@ -39,13 +32,13 @@ public class CustomPagerAdapter extends PagerAdapter {
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.layout_recipe_step, collection, false);
 
         TextView txtDescription = layout.findViewById(R.id.stepDescription);
-        txtDescription.setText(step.description);
+        txtDescription.setText(step.getStep_description());
         TextView txtDuration = layout.findViewById(R.id.stepDuration);
-        txtDuration.setText("Duration:"+Integer.toString(step.durationMinute));
+        txtDuration.setText("Duration:"+Integer.toString(step.getDuration_minute()));
 
         ImageView imgStepImg = layout.findViewById(R.id.stepImage);
         imgStepImg.setScaleType(ImageView.ScaleType.FIT_XY);
-        Picasso.get().load(step.imageUrl).resize(100,100).into(imgStepImg);
+        Picasso.get().load(step.getStep_image_url()).resize(100,100).into(imgStepImg);
 
 
         collection.addView(layout);

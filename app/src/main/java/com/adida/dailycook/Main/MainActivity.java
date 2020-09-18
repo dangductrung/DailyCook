@@ -1,128 +1,79 @@
 package com.adida.dailycook.Main;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-import com.adida.dailycook.Main.HomepageFragment.HomepageFragment;
-import com.adida.dailycook.PagerAdapter.PagerAdapter;
-import com.adida.dailycook.Profile.ProfileActivity;
+import android.widget.LinearLayout;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.adida.dailycook.Main.Fragment.Home.HomeFragment;
+import com.adida.dailycook.Main.Fragment.Profile.ProfileFragment;
 import com.adida.dailycook.R;
-import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
+import com.adida.dailycook.helpers.BottomNavigationBehavior;
 import com.adida.dailycook.login.LoginPage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private Intent loginIntent;
-    private PagerAdapter tabAdapter;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private BottomNavigationView navigationView;
+    private BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         loginIntent = new Intent(this, LoginPage.class);
-        if(getSharedPreferences(Config.SHARED_PREFERENCES.USER.SP_NAME, MODE_PRIVATE).getAll().isEmpty()) {
+        if (getSharedPreferences(Config.SHARED_PREFERENCES.USER.SP_NAME, MODE_PRIVATE).getAll().isEmpty()) {
             startActivity(loginIntent);
             finish();
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        getSupportActionBar().setElevation(0);
 
-        viewPager = findViewById(R.id.viewPagerHomePage);
-        tabLayout = findViewById(R.id.tabLayoutHomepage);
-        navigationView = findViewById(R.id.navigation);
-        setView();
+        navigation = findViewById(R.id.navigation);
 
+        loadFragment(new HomeFragment());
 
-        ImageButton signOutImageButton = findViewById(R.id.imageButtonSignoutHomepage);
-        signOutImageButton.setOnClickListener(new View.OnClickListener() {
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).clear();
-                startActivity(loginIntent);
-                finish();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.navigation_homepage:
+                        fragment = new HomeFragment();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.navigation_dinning:
+                        return true;
+                    case R.id.navigation_search:
+                        return true;
+                    case R.id.navigation_favorite:
+                        return true;
+                    case R.id.navigation_profile:
+                        fragment = new ProfileFragment();
+                        loadFragment(fragment);
+                        return true;
+                }
+                return false;
             }
         });
 
-        //DEMO
-        navigationView.setOnNavigationItemSelectedListener(this);
-
-        LoadHomepageData();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
     }
 
 
-    private void highLightCurrentTab(int position) {
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            assert tab != null;
-            tab.setCustomView(null);
-            tab.setCustomView(tabAdapter.getTabView(i));
-        }
-        TabLayout.Tab tab = tabLayout.getTabAt(position);
-        assert tab != null;
-        tab.setCustomView(null);
-        tab.setCustomView(tabAdapter.getSelectedTabView(position));
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayoutMain, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private void LoadHomepageData(){
-        TextView userTextView = findViewById(R.id.textViewFirstNameHomepage);
-        userTextView.setText(SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).get(Config.SHARED_PREFERENCES.USER.NAME, String.class));
-
-        TextView dateTextView = findViewById(R.id.textViewDateHomepage);
-        dateTextView.setText(new SimpleDateFormat("MM/dd/YYYY").format(Calendar.getInstance().getTime()));
-    }
-
-
-    private void setView() {
-        tabAdapter = new PagerAdapter(getSupportFragmentManager(), this);
-        tabAdapter.addFragment(new HomepageFragment(), "Soup");
-        tabAdapter.addFragment(new HomepageFragment(), "Đồ chiên");
-        tabAdapter.addFragment(new HomepageFragment(), "Đồ Hàn");
-        tabAdapter.addFragment(new HomepageFragment(), "Đồ Âu");
-        tabAdapter.addFragment(new HomepageFragment(), "Đồ Á");
-        tabAdapter.addFragment(new HomepageFragment(), "Đồ Pháp");
-
-        viewPager.setAdapter(tabAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        highLightCurrentTab(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-            @Override
-            public void onPageSelected(int position) {
-                highLightCurrentTab(position);
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.navigation_profile){
-            startActivity(new Intent(this, ProfileActivity.class));
-        }
-
-        return false;
-    }
 }
