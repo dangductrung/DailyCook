@@ -3,7 +3,9 @@ package com.adida.dailycook.retrofit2.entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RecipeDetail {
+import java.io.Serializable;
+
+public class RecipeDetail implements Serializable {
     @SerializedName("recipe")
     @Expose
     private Recipe recipe;

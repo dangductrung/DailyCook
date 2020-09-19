@@ -3,9 +3,10 @@ package com.adida.dailycook.retrofit2.entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RecipeDetailSteps {
+public class RecipeDetailSteps implements Serializable {
     @SerializedName("recipe")
     @Expose
     Recipe recipe;

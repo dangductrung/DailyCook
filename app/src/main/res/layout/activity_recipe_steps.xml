@@ -27,13 +27,23 @@
                 android:layout_alignParentLeft="true"/>
 
             <TextView
+                android:textColor="@color/colorBlack"
+                android:textSize="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_centerInParent="true"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="200px"
                 android:layout_height="match_parent"
                 android:id="@+id/stepNumber"/>
 
             <TextView
+                android:textColor="@color/colorBlack"
+                android:textSize="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="200px"
                 android:layout_height="match_parent"
                 android:id="@+id/stepDuration"/>

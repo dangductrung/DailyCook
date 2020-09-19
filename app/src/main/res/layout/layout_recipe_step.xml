@@ -5,15 +5,18 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="100px"
         android:layout_marginBottom="100px"
-        android:paddingLeft="50px"
-        android:paddingRight="50px"
+        android:paddingLeft="75px"
+        android:paddingRight="75px"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:id="@+id/stepImage"/>
 
     <TextView
+        android:textSize="24dp"
+        android:paddingHorizontal="40dp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
         android:layout_below="@+id/stepImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

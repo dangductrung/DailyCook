@@ -3,9 +3,11 @@ package com.adida.dailycook.recipeSteps;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.Window;
@@ -14,13 +16,25 @@ import android.widget.TextView;
 
 import com.adida.dailycook.R;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
+import com.adida.dailycook.retrofit2.entities.RecipeDetailSteps;
 import com.adida.dailycook.retrofit2.entities.RecipeStep;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class RecipeSteps extends AppCompatActivity {
+
+    public static void startActivity(Activity context, RecipeDetailSteps detail){
+        Intent intent = new Intent(context,RecipeSteps.class);
+        Bundle extras = new Bundle();
+
+        Serializable serializable = (Serializable)detail;
+        extras.putSerializable("detail", serializable);
+        intent.putExtras(extras);
+        context.startActivity(intent);
+    }
 
     TextView txtStepDuration;
     TextView txtStepNumber;
@@ -33,7 +47,8 @@ public class RecipeSteps extends AppCompatActivity {
     CountDownTimer durationCountDown;
     TextToSpeech textToSpeech;
     List<RecipeStep> steps;
-    List<Integer> stepsTimeLeft;
+    RecipeDetailSteps detail;
+    //List<Integer> stepsTimeLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +58,9 @@ public class RecipeSteps extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_recipe_steps);
+
+        detail = (RecipeDetailSteps) getIntent().getExtras().getSerializable("detail");
+
 
         txtStepDuration = (TextView) findViewById(R.id.stepDuration);
         txtStepNumber = (TextView)findViewById(R.id.stepNumber);
@@ -81,26 +99,19 @@ public class RecipeSteps extends AppCompatActivity {
 
 
 
-        steps = new ArrayList<>();
+        steps = detail.getSteps();
         RecipeStep step = new RecipeStep();
         step.setStep_id(1);
-        step.setDuration_minute(30);
-        step.setStep_description("description");
+        step.setDuration_minute(0);
         step.setStep_Order(3);
-        step.setStep_image_url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png");
+        step.setStep_image_url("https://tr.rbxcdn.com/f06e365c9d4f67e60ae2bff2f9e7fa46/420/420/Decal/Png");
 
-        RecipeStep step1 = new RecipeStep();
-        step1.setStep_id(1);
-        step1.setDuration_minute(30);
-        step1.setStep_description("description");
-        step1.setStep_Order(3);
-        step1.setStep_image_url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/800px-Image_created_with_a_mobile_phone.png");
         steps.add(step);
-        steps.add(step1);
 
-        for(int i=0; i< steps.size();i++){
-            stepsTimeLeft.add(steps.get(i).getDuration_minute()*1000);
-        }
+//        stepsTimeLeft = new ArrayList<>();
+//        for(int i=0; i< steps.size();i++){
+//            stepsTimeLeft.add(steps.get(i).getDuration_minute()*1000);
+//        }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this,steps));
@@ -128,7 +139,7 @@ public class RecipeSteps extends AppCompatActivity {
             public void onPageSelected(int position) {
                 OnPageChange(position);
             }
-            
+
         });
     }
 
@@ -161,22 +172,35 @@ public class RecipeSteps extends AppCompatActivity {
         }
 
         final RecipeStep currentStep = steps.get(page);
-        final int currentStepTimeLeft = stepsTimeLeft.get(page);
+        //final int currentStepTimeLeft = stepsTimeLeft.get(page);
 
-        durationCountDown = new CountDownTimer(30000, 1000) {
+        final int nextTimeout = 3000;
+
+        durationCountDown = new CountDownTimer(currentStep.getDuration_minute()*60*1000 + nextTimeout, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                txtStepDuration.setText("" + currentStepTimeLeft);
+                if(millisUntilFinished - nextTimeout >= 0){
+                    long second = (millisUntilFinished - nextTimeout)/1000;
+
+                    long numberOfMinutes = ((second % 86400 ) % 3600 ) / 60;
+                    long numberOfSeconds = ((second % 86400 ) % 3600 ) % 60;
+
+                    txtStepDuration.setText("" + numberOfMinutes + ":" + numberOfSeconds );
+                }
+                else{
+                    //Set timeout
+                    txtStepDuration.setText("");
+                }
             }
 
             public void onFinish() {
-                txtStepDuration.setText("done!");
+                viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
             }
 
         };
 
         durationCountDown.start();
-        txtStepNumber.setText(Integer.toString(viewPager.getCurrentItem()));
+        txtStepNumber.setText(Integer.toString(viewPager.getCurrentItem() + 1) + "/" + Integer.toString(steps.size()));
 
         if(IsVoiceOn){
             textToSpeech.speak(currentStep.getStep_description(), TextToSpeech.QUEUE_FLUSH, null);

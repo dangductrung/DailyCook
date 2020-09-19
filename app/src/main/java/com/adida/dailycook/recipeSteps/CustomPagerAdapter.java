@@ -36,8 +36,11 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         ImageView imgStepImg = layout.findViewById(R.id.stepImage);
         imgStepImg.setScaleType(ImageView.ScaleType.FIT_XY);
-        Picasso.get().load(step.getStep_image_url()).resize(100,100).into(imgStepImg);
 
+        String imgUrl = step.getStep_image_url();
+        if(imgUrl != null && !imgUrl.isEmpty()){
+            Picasso.get().load(step.getStep_image_url()).resize(100,100).into(imgStepImg);
+        }
 
         collection.addView(layout);
         return layout;

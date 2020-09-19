@@ -100,8 +100,7 @@ public class RecipeDetailPage extends AppCompatActivity {
     }
 
     private void didTapStartButton() {
-        Intent intent = new Intent(this, RecipeSteps.class);
-        startActivity(intent);
+        RecipeSteps.startActivity(this,detail);
     }
 
     private void LoadData() {
