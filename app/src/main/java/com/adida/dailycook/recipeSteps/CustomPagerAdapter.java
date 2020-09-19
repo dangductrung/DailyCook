@@ -33,8 +33,6 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         TextView txtDescription = layout.findViewById(R.id.stepDescription);
         txtDescription.setText(step.getStep_description());
-        TextView txtDuration = layout.findViewById(R.id.stepDuration);
-        txtDuration.setText("Duration:"+Integer.toString(step.getDuration_minute()));
 
         ImageView imgStepImg = layout.findViewById(R.id.stepImage);
         imgStepImg.setScaleType(ImageView.ScaleType.FIT_XY);
