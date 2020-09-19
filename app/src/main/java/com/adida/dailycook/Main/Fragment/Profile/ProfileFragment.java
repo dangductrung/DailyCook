@@ -2,22 +2,42 @@ package com.adida.dailycook.Main.Fragment.Profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.SharedPreference.SharedPreference;
+import com.adida.dailycook.config.Config;
+import com.adida.dailycook.retrofit2.ServiceManager;
+import com.adida.dailycook.retrofit2.entities.RecipeDetail;
+import com.adida.dailycook.retrofit2.entities.User;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
-    CircleImageView imgUserAvatar;
-    RecyclerView listUploadRecipes;
-    RecipeProfileAdapter adapter;
+    private CircleImageView imgUserAvatar;
+    private RecyclerView listUploadRecipes;
+    private RecipeProfileAdapter adapter;
+    private TextView txtUserName;
+    private TextView txtUserEmail;
+    private TextView txtUserPhone;
+    private Toolbar toolbar;
     private View view;
+    private User user;
+
 
 
     public ProfileFragment() {
@@ -43,20 +63,70 @@ public class ProfileFragment extends Fragment {
 
         imgUserAvatar = view.findViewById(R.id.imgUserAvatar);
         listUploadRecipes = view.findViewById(R.id.listUploadRecipe);
+        txtUserName = view.findViewById(R.id.txtUserName);
+        txtUserEmail = view.findViewById(R.id.txtUserEmail);
+        txtUserPhone = view.findViewById(R.id.txtUserPhone);
+        toolbar = view.findViewById(R.id.toolbarProfile);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        toolbar.inflateMenu(R.menu.menu_profile);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //
+                return false;
+            }
+        });
 
-        initUI();
+        loadUserData();
 
         return view;
     }
 
-    private void initUI() {
+    private void loadUserData() {
 
-        Picasso.get().load("https://i.pinimg.com/236x/25/8d/75/258d75c4e1fed2b2eaa8a3c5854df1ac.jpg")
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.color.colorBlack).into(imgUserAvatar);
+        ServiceManager.getInstance().getUserService()
+                .getUserByID(SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).getUserId(Config.SHARED_PREFERENCES.USER.ID)).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                user = response.body();
+                setData();
+            }
 
-        listUploadRecipes.setHasFixedSize(true);
-        adapter = new RecipeProfileAdapter();
-        listUploadRecipes.setAdapter(adapter);
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void setData(){
+//        Picasso.get().load(user.getAvatar())
+//                .placeholder(R.drawable.ic_launcher_background)
+//                .error(R.color.colorBlack).into(imgUserAvatar);
+//        txtUserName.setText(user.getName());
+//        txtUserEmail.setText(user.getEmail());
+//        adapter = new RecipeProfileAdapter();
+//        loadUploadData();
+    }
+
+    private void loadUploadData(){
+        ServiceManager.getInstance().getRecipeService().getManagedRecipe(0, user.getId()).enqueue(new Callback<List<RecipeDetail>>() {
+            @Override
+            public void onResponse(Call<List<RecipeDetail>> call, Response<List<RecipeDetail>> response) {
+                List<RecipeDetail> list = response.body();
+                for(RecipeDetail recipeDetail : list) {
+                    adapter.m_recipeList.add(recipeDetail.getRecipe());
+                }
+                listUploadRecipes.setHasFixedSize(true);
+                listUploadRecipes.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<RecipeDetail>> call, Throwable t) {
+
+            }
+        });
     }
 }

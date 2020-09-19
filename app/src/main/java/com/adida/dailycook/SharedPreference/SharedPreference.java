@@ -30,6 +30,10 @@ public class SharedPreference {
         return null;
     }
 
+    public String getUserId(String key){
+        return String.valueOf(sharedPreferences.getInt(key, 0));
+    }
+
     public <T> void put(String key, T data) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (data instanceof String) {

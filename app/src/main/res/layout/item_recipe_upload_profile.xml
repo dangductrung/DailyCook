@@ -17,10 +17,10 @@
 
 
     <TextView
+        android:id="@+id/txtFoodName"
         android:layout_weight="0.6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Cánh gà chiên nước mắm"
         android:layout_gravity="center"
         android:textSize="14dp"
         android:layout_marginLeft="20dp"
@@ -43,9 +43,9 @@
                 android:text="Lượt xem: "
                 android:textSize="10dp"/>
             <TextView
+                android:id="@+id/txtFoodView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="15000"
                 android:textSize="10dp"/>
         </LinearLayout>
 
@@ -58,9 +58,9 @@
                     android:text="Lượt yêu thích: "
                     android:textSize="10dp"/>
                 <TextView
+                    android:id="@+id/txtFoodFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3000"
                     android:textSize="10dp"/>
         </LinearLayout>
     </LinearLayout>

@@ -4,16 +4,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.retrofit2.ServiceManager;
+import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class RecipeProfileAdapter extends RecyclerView.Adapter<RecipeProfileAdapter.RecipeViewHolder> {
 
-    String[] m_recipeList = new String[]{"1", "2", "3", "4", "5", "6", "7"};
+    public ArrayList<Recipe> m_recipeList = null;
 
     public RecipeProfileAdapter(){
     }
@@ -28,26 +33,37 @@ public class RecipeProfileAdapter extends RecyclerView.Adapter<RecipeProfileAdap
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
 
-        Picasso.get().load("https://daynghevietuc.com/wp-content/uploads/2017/05/TD14_09_Canh_Ga_Chien_Nuoc_Mam_0000x0000_0.jpg")
+        Recipe recipe = m_recipeList.get(position);
+
+        Picasso.get().load(m_recipeList.indexOf(recipe.getImageUrl()))
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.color.colorBlack)
                 .into(holder.foodPortrait);
-
+        holder.txtFoodName.setText(recipe.getRecipeName());
+        holder.txtFoodFavorite.setText(recipe.getRating()+"");
+        holder.txtFoodView.setText("0");
 
     }
 
     @Override
     public int getItemCount() {
-        return m_recipeList == null ? 0 : m_recipeList.length;
+        return m_recipeList == null ? 0 : m_recipeList.size();
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView foodPortrait;
+        private TextView txtFoodName;
+        private TextView txtFoodView;
+        private TextView txtFoodFavorite;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             foodPortrait = itemView.findViewById(R.id.imgFoodItemRecipeUpload);
+            txtFoodName = itemView.findViewById(R.id.txtFoodName);
+            txtFoodView = itemView.findViewById(R.id.txtFoodView);
+            txtFoodFavorite = itemView.findViewById(R.id.txtFoodFavorite);
         }
     }
+
 }

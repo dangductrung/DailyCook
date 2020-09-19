@@ -2,6 +2,7 @@ package com.adida.dailycook.Main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.adida.dailycook.config.Config;
 import com.adida.dailycook.helpers.BottomNavigationBehavior;
 import com.adida.dailycook.login.LoginPage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
     private Intent loginIntent;
@@ -76,4 +79,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return  true;
+    }
 }
