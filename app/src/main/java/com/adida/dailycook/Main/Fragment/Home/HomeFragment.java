@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment.RecipeHomeFragment;
 import com.adida.dailycook.PagerAdapter.PagerAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;

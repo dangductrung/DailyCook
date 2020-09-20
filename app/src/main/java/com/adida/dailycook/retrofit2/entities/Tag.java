@@ -8,9 +8,9 @@ public class Tag {
     @Expose
     private String id;
 
-    @SerializedName("tag")
+    @SerializedName("title")
     @Expose
-    private String ingredient;
+    private String title;
 
     public String getId() {
         return id;
@@ -20,11 +20,11 @@ public class Tag {
         this.id = id;
     }
 
-    public String getIngredient() {
-        return ingredient;
+    public String getTitle() {
+        return title;
     }
 
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

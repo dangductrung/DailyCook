@@ -1,4 +1,4 @@
-package com.adida.dailycook.Main.Fragment.Home.RecipeHomeRecyclerView;
+package com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment.RecipeHomeRecyclerview;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +37,7 @@ public class RecipeHomeRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.homepage_recyclerview, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.recipe_recyclerview, parent, false);
             return new ItemViewHolder(view);
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);

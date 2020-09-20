@@ -21,12 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main.Fragment.Profile.ProfileFragment"/>
-
         <activity android:name=".login.LoginPage">
         </activity>
         <activity android:name=".recipeDetail.RecipeDetailPage"></activity>
         <activity android:name=".register.RegisterPage"></activity>
+        <activity android:name=".Upload.UploadActivity" android:exported="true" android:windowSoftInputMode="stateAlwaysHidden" />
 
     </application>
 
