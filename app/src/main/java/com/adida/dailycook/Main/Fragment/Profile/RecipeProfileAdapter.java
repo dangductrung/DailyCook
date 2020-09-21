@@ -1,5 +1,6 @@
 package com.adida.dailycook.Main.Fragment.Profile;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +11,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.config.Config;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeProfileAdapter extends RecyclerView.Adapter<RecipeProfileAdapter.RecipeViewHolder> {
 
-    public ArrayList<Recipe> m_recipeList = null;
+    private Context m_context;
+    private ArrayList<Recipe> m_recipeList;
 
-    public RecipeProfileAdapter(){
+    public RecipeProfileAdapter(Context context, ArrayList<Recipe> recipeList){
+        m_context = context;
+        m_recipeList = recipeList;
     }
 
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe_upload_profile, parent, false);
+        View view = LayoutInflater.from(m_context).inflate(R.layout.item_recipe_upload_profile, parent, false);
         return new RecipeViewHolder(view);
     }
 
@@ -36,12 +42,12 @@ public class RecipeProfileAdapter extends RecyclerView.Adapter<RecipeProfileAdap
         Recipe recipe = m_recipeList.get(position);
 
         Picasso.get().load(m_recipeList.indexOf(recipe.getImageUrl()))
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.color.colorBlack)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
                 .into(holder.foodPortrait);
         holder.txtFoodName.setText(recipe.getRecipeName());
         holder.txtFoodFavorite.setText(recipe.getRating()+"");
-        holder.txtFoodView.setText("0");
+//        holder.txtFoodView.setText("0");
 
     }
 

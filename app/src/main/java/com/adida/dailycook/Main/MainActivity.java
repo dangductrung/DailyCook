@@ -13,6 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.adida.dailycook.Main.Fragment.Favorite.FavoriteFragment;
 import com.adida.dailycook.Main.Fragment.Home.HomeFragment;
 import com.adida.dailycook.Main.Fragment.Profile.ProfileFragment;
 import com.adida.dailycook.R;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_search:
                         return true;
                     case R.id.navigation_favorite:
+                        fragment = new FavoriteFragment();
+                        loadFragment(fragment);
                         return true;
                     case R.id.navigation_profile:
                         fragment = new ProfileFragment();

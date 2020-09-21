@@ -16,10 +16,12 @@ import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
 import com.adida.dailycook.retrofit2.ServiceManager;
+import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 import com.adida.dailycook.retrofit2.entities.User;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,8 +39,9 @@ public class ProfileFragment extends Fragment {
     private Toolbar toolbar;
     private View view;
     private User user;
+    private TextView txtEmptyView;
 
-
+    private ArrayList<Recipe> recipeList;
 
     public ProfileFragment() {
     }
@@ -67,6 +70,7 @@ public class ProfileFragment extends Fragment {
         txtUserEmail = view.findViewById(R.id.txtUserEmail);
         txtUserPhone = view.findViewById(R.id.txtUserPhone);
         toolbar = view.findViewById(R.id.toolbarProfile);
+        txtEmptyView = view.findViewById(R.id.txtEmptyView);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
         toolbar.inflateMenu(R.menu.menu_profile);
@@ -86,11 +90,14 @@ public class ProfileFragment extends Fragment {
     private void loadUserData() {
 
         ServiceManager.getInstance().getUserService()
-                .getUserByID(SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).getUserId(Config.SHARED_PREFERENCES.USER.ID)).enqueue(new Callback<User>() {
+                .getUserByID(String.valueOf(SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME)
+                        .get(Config.SHARED_PREFERENCES.USER.ID, Integer.class))).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                user = response.body();
-                setData();
+                if(response.body() != null){
+                    user = response.body();
+                    setData();
+                }
             }
 
             @Override
@@ -102,25 +109,35 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setData(){
-//        Picasso.get().load(user.getAvatar())
-//                .placeholder(R.drawable.ic_launcher_background)
-//                .error(R.color.colorBlack).into(imgUserAvatar);
-//        txtUserName.setText(user.getName());
-//        txtUserEmail.setText(user.getEmail());
-//        adapter = new RecipeProfileAdapter();
-//        loadUploadData();
+        Picasso.get().load(user.getAvatar())
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error).into(imgUserAvatar);
+        txtUserName.setText(user.getName());
+        txtUserEmail.setText(user.getEmail());
+        loadUploadData();
     }
+
 
     private void loadUploadData(){
         ServiceManager.getInstance().getRecipeService().getManagedRecipe(0, user.getId()).enqueue(new Callback<List<RecipeDetail>>() {
             @Override
             public void onResponse(Call<List<RecipeDetail>> call, Response<List<RecipeDetail>> response) {
-                List<RecipeDetail> list = response.body();
-                for(RecipeDetail recipeDetail : list) {
-                    adapter.m_recipeList.add(recipeDetail.getRecipe());
+                if(response.body() != null){
+                    listUploadRecipes.setVisibility(View.VISIBLE);
+                    txtEmptyView.setVisibility(View.GONE);
+
+                    recipeList = new ArrayList<Recipe>();
+                    List<RecipeDetail> list = response.body();
+                    for(RecipeDetail recipeDetail : list) {
+                        recipeList.add(recipeDetail.getRecipe());
+                    }
+
+                    setAdapter();
                 }
-                listUploadRecipes.setHasFixedSize(true);
-                listUploadRecipes.setAdapter(adapter);
+                else {
+                    listUploadRecipes.setVisibility(View.GONE);
+                    txtEmptyView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -128,5 +145,11 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setAdapter(){
+        adapter = new RecipeProfileAdapter(getActivity(), recipeList);
+//        listUploadRecipes.setHasFixedSize(true);
+        listUploadRecipes.setAdapter(adapter);
     }
 }
