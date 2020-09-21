@@ -13,6 +13,7 @@
         android:paddingBottom="10dp"
         android:background="@drawable/shadow_background">
         <ImageButton
+            android:id="@+id/imageButtonBackUploadActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -21,6 +22,7 @@
             android:background="@drawable/ic_back"
             android:backgroundTint="@color/colorAccent"/>
         <TextView
+            android:id="@+id/textViewTitleUploadActivity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,6 +32,7 @@
             android:textSize="24dp"
             android:textColor="@color/colorAccent"/>
         <Button
+            android:id="@+id/buttonDoneUploadActivity"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Xong"

@@ -10,14 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
+import com.adida.dailycook.retrofit2.entities.Tag;
 
 import java.util.List;
 
 public class TagUploadRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<String> list;
+    private List<Tag> list;
 
-    public TagUploadRecyclerViewAdapter(Context context, List<String> list) {
+    public TagUploadRecyclerViewAdapter(Context context, List<Tag> list) {
         this.context = context;
         this.list = list;
     }
@@ -33,8 +34,8 @@ public class TagUploadRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         final ItemViewHolder holder = (ItemViewHolder) viewHolder;
 
-        final String model = list.get(position);
-        holder.title.setText(model);
+        final Tag model = list.get(position);
+        holder.title.setText(model.getTitle());
     }
 
     @Override

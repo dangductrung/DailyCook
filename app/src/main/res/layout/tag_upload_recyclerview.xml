@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="5dp"
+    card_view:contentPaddingLeft="10dp"
+    card_view:contentPaddingRight="10dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/textViewTitleTagRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardUseCompatPadding="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        card_view:contentPadding="5dp"
-        card_view:contentPaddingLeft="10dp"
-        card_view:contentPaddingRight="10dp">
-        <TextView
-            android:id="@+id/textViewTitleTagRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center_horizontal"
-            />
-    </androidx.cardview.widget.CardView>
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

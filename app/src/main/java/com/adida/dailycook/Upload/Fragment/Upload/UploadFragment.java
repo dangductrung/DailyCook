@@ -1,8 +1,13 @@
 package com.adida.dailycook.Upload.Fragment.Upload;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +16,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -20,28 +27,54 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
-import com.adida.dailycook.SharedPreference.SharedPreference;
+import com.adida.dailycook.Upload.Fragment.Step.StepFragment;
+import com.adida.dailycook.Upload.Fragment.Tag.TagFragment;
 import com.adida.dailycook.Upload.Fragment.Upload.IngredientUploadRecyclerView.IngredientUploadRecyclerViewAdapter;
 import com.adida.dailycook.Upload.Fragment.Upload.StepUploadRecyclerView.StepUploadModel;
 import com.adida.dailycook.Upload.Fragment.Upload.StepUploadRecyclerView.StepUploadRecyclerViewAdapter;
 import com.adida.dailycook.Upload.Fragment.Upload.TagUploadRecyclerview.TagUploadRecyclerViewAdapter;
-import com.adida.dailycook.Upload.Fragment.Upload.ViewModel.UploadViewModel;
-import com.adida.dailycook.config.Config;
+import com.adida.dailycook.Upload.ViewModel.UploadViewModel;
+import com.adida.dailycook.retrofit2.entities.Tag;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+
+import static android.app.Activity.RESULT_OK;
 
 public class UploadFragment extends Fragment implements StepUploadRecyclerViewAdapter.StepUploadListener {
+    private static final int PICK_IMAGE_REQUEST = 71;
+    private static final int IMAGE_CAPTURE_REQUEST = 72;
     private View view;
-    private List<String> tags;
+    private List<Tag> tags;
     private List<String> ingredients;
     private List<StepUploadModel> steps;
     private TagUploadRecyclerViewAdapter tagAdapter;
     private IngredientUploadRecyclerViewAdapter ingredientAdapter;
     private StepUploadRecyclerViewAdapter stepAdapter;
+    private ImageView illustration;
     private UploadViewModel model;
+
+    //firebase
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private UUID UUID;
+    private String url;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -65,18 +98,27 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_upload, container, false);
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         RecyclerView tagRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewTagUploadFragment);
         RecyclerView ingredientRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewIngredientUploadFragment);
         RecyclerView stepRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewStepUploadFragment);
 
-        tags = new ArrayList<String>();
-        ingredients = new ArrayList<String>();
-        steps = new ArrayList<StepUploadModel>();
+        FlexboxLayoutManager tagLayoutManager = new FlexboxLayoutManager(getContext());
+        tagLayoutManager.setFlexWrap(FlexWrap.WRAP);
+        tagLayoutManager.setFlexDirection(FlexDirection.ROW);
+        tagLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        tagRecyclerView.setLayoutManager(tagLayoutManager);
+
+        tags = new ArrayList<>();
+        ingredients = new ArrayList<>();
+        steps = new ArrayList<>();
 
         model = new ViewModelProvider(requireActivity()).get(UploadViewModel.class);
-        model.getTags().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        model.getTags().observe(getViewLifecycleOwner(), new Observer<List<Tag>>() {
             @Override
-            public void onChanged(List<String> data) {
+            public void onChanged(List<Tag> data) {
                 tags.clear();
                 tags.addAll(data);
                 tagAdapter.notifyDataSetChanged();
@@ -122,7 +164,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         tagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                loadFragment(new TagFragment());
             }
         });
 
@@ -142,38 +184,30 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         stepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<StepUploadModel> sub = new ArrayList<StepUploadModel>();
-                StepUploadModel temp = new StepUploadModel();
-                temp.setDescription("Hello World");
-                sub.add(temp);
-                model.addSteps(sub);
-                stepAdapter.notifyDataSetChanged();
+                //List<StepUploadModel> sub = new ArrayList<StepUploadModel>();
+                //StepUploadModel temp = new StepUploadModel();
+                //temp.setDescription("Hello World");
+                //sub.add(temp);
+                //model.addSteps(sub);
+                //stepAdapter.notifyDataSetChanged();
+                loadFragment(new StepFragment());
             }
         });
 
-        ImageButton illustrationButton = view.findViewById(R.id.imageButtonIllustrationAddingUploadFragment);
-        tagButton.setOnClickListener(new View.OnClickListener() {
+        illustration = view.findViewById(R.id.imageViewIllustrationAddingUploadFragment);
+        illustration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectImage();
             }
         });
 
         return view;
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private void LoadHomepageData() {
-        TextView userTextView = view.findViewById(R.id.textViewFirstNameHomepage);
-        userTextView.setText(SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).get(Config.SHARED_PREFERENCES.USER.NAME, String.class));
-
-        TextView dateTextView = view.findViewById(R.id.textViewDateHomepage);
-        dateTextView.setText(new SimpleDateFormat("MM/dd/YYYY").format(Calendar.getInstance().getTime()));
-    }
-
     private void loadFragment(Fragment fragment) {
         // load fragment
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        @SuppressLint({"NewApi", "LocalSuppress"}) FragmentTransaction transaction = Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayoutUpload, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -184,30 +218,105 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         model.removeStep(index);
     }
 
-    private void selectImage(Context context) {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+    private void uploadImage(Uri uri) {
+        if (uri != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setTitle("Đang tải hình...");
+            progressDialog.show();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
+            UUID = java.util.UUID.randomUUID();
 
+            final StorageReference ref = storageReference.child("images/" + UUID.toString());
+            ref.putFile(uri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    //url of img on firebase
+                                    url = String.valueOf(uri);
+
+                                    Picasso.get().load(url).into(illustration);
+
+                                    progressDialog.dismiss();
+
+                                    Toast.makeText(getContext(), "Tải hình thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(), "Tải hình thất bại ", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Đã tải " + (int) progress + "%");
+                        }
+                    });
+
+        }
+
+    }
+
+    private void selectImage() {
+        final CharSequence[] options = { "Chụp từ máy ảnh", "Chọn hình từ thư viện ảnh","Hủy" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Đăng tải hình");
         builder.setItems(options, new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);
-
-                } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , 1);
-
-                } else if (options[item].equals("Cancel")) {
+                if (options[item].equals("Chụp từ máy ảnh"))
+                {
+                    takeImage();
+                }
+                else if (options[item].equals("Chọn hình từ thư viện ảnh"))
+                {
+                    chooseImage();
+                }
+                else if (options[item].equals("Hủy")) {
                     dialog.dismiss();
                 }
             }
         });
         builder.show();
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    private void takeImage() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity( getActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, IMAGE_CAPTURE_REQUEST);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            //here
+            uploadImage(data.getData());
+        }
+
+        if (requestCode == IMAGE_CAPTURE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            //here
+            uploadImage(data.getData());
+        }
     }
 }

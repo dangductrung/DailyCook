@@ -1,45 +1,51 @@
-package com.adida.dailycook.Upload.Fragment.Upload.ViewModel;
+package com.adida.dailycook.Upload.ViewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.adida.dailycook.Upload.Fragment.Upload.StepUploadRecyclerView.StepUploadModel;
+import com.adida.dailycook.retrofit2.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UploadViewModel extends ViewModel {
-    private MutableLiveData<List<String>> tags;
+    private MutableLiveData<List<Tag>> tags;
     private MutableLiveData<List<String>> ingredients;
     private MutableLiveData<List<StepUploadModel>> steps;
 
-    public LiveData<List<String>> getTags() {
+    public LiveData<List<Tag>> getTags() {
         if (tags == null) {
-            tags = new MutableLiveData<List<String>>();
+            tags = new MutableLiveData<>();
         }
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags.setValue(tags);
     }
 
-    public void addTags(List<String> tags) {
-        List<String> set = this.tags.getValue();
-        set.addAll(tags);
+    public void addTag(Tag tag) {
+        List<Tag> set = this.tags.getValue();
+        if (set == null) {
+            set = new ArrayList<>();
+        }
+        set.add(tag);
         this.tags.setValue(set);
     }
 
-    public void removeTag(int index) {
-        List<String> set = this.tags.getValue();
-        set.remove(index);
+    public void removeTag(Tag tag) {
+        List<Tag> set = this.tags.getValue();
+        if (set != null) {
+            set.remove(tag);
+        }
         this.tags.setValue(set);
     }
 
     public LiveData<List<String>> getIngredients() {
         if (ingredients == null) {
-            ingredients = new MutableLiveData<List<String>>();
+            ingredients = new MutableLiveData<>();
         }
         return ingredients;
     }
@@ -50,7 +56,7 @@ public class UploadViewModel extends ViewModel {
     public void addIngredient(String ingredient) {
         List<String> set = this.ingredients.getValue();
         if (set == null) {
-            set = new ArrayList<String>();
+            set = new ArrayList<>();
         }
         set.add(ingredient);
         this.ingredients.setValue(set);
@@ -58,13 +64,15 @@ public class UploadViewModel extends ViewModel {
 
     public void removeIngredient(int index) {
         List<String> set = this.ingredients.getValue();
-        set.remove(index);
+        if (set != null) {
+            set.remove(index);
+        }
         this.ingredients.setValue(set);
     }
 
     public LiveData<List<StepUploadModel>> getSteps() {
         if (steps == null) {
-            steps = new MutableLiveData<List<StepUploadModel>>();
+            steps = new MutableLiveData<>();
         }
         return steps;
     }
@@ -76,7 +84,7 @@ public class UploadViewModel extends ViewModel {
     public void addSteps(List<StepUploadModel> steps) {
         List<StepUploadModel> set = this.steps.getValue();
         if (set == null) {
-            set = new ArrayList<StepUploadModel>();
+            set = new ArrayList<>();
         }
         set.addAll(steps);
         this.steps.setValue(set);
@@ -84,7 +92,9 @@ public class UploadViewModel extends ViewModel {
 
     public void removeStep(int index) {
         List<StepUploadModel> set = this.steps.getValue();
-        set.remove(index);
+        if (set != null) {
+            set.remove(index);
+        }
         this.steps.setValue(set);
     }
 
