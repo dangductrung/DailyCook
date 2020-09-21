@@ -67,8 +67,8 @@
                     android:id="@+id/recyclerViewTagUploadFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"/>
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"/>
 
                 <Button
                     android:id="@+id/buttonTagAddingUploadFragment"
@@ -101,7 +101,9 @@
                     android:id="@+id/recyclerViewIngredientUploadFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,6 +162,8 @@
                     android:id="@+id/recyclerViewStepUploadFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
                 <Button
@@ -190,8 +194,8 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp">
-            <ImageButton
-                android:id="@+id/imageButtonIllustrationAddingUploadFragment"
+            <ImageView
+                android:id="@+id/imageViewIllustrationAddingUploadFragment"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/ic_placeholder"

@@ -5,6 +5,7 @@ import com.adida.dailycook.retrofit2.services.FavoriteService;
 import com.adida.dailycook.retrofit2.services.FriendService;
 import com.adida.dailycook.retrofit2.services.RecipeService;
 import com.adida.dailycook.retrofit2.services.ReviewService;
+import com.adida.dailycook.retrofit2.services.TagService;
 import com.adida.dailycook.retrofit2.services.UserService;
 
 import retrofit2.Retrofit;
@@ -49,5 +50,9 @@ public class ServiceManager {
 
     public FriendService getFriendService() {
         return retrofit.create(FriendService.class);
+    }
+
+    public TagService getTagService() {
+        return retrofit.create(TagService.class);
     }
 }

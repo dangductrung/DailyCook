@@ -8,12 +8,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
-import com.adida.dailycook.Upload.Fragment.Upload.ViewModel.UploadViewModel;
-import com.adida.dailycook.retrofit2.entities.RecipeStep;
 
 import java.util.List;
 
@@ -54,11 +51,6 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         });
     }
 
-    public void setOnShareClickedListener(StepUploadListener callback) {
-        this.callback = callback;
-    }
-
-
     @Override
     public int getItemCount() {
         return list == null ? 0 : list.size();
@@ -80,6 +72,10 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     public interface StepUploadListener {
         public void removeStep(int index);
+    }
+
+    public void setOnShareClickedListener(StepUploadListener callback) {
+        this.callback = callback;
     }
 }
 
