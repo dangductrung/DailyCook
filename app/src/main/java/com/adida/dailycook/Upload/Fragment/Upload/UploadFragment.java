@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -17,9 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -41,7 +44,6 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -49,17 +51,22 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-
 
 import static android.app.Activity.RESULT_OK;
 
 public class UploadFragment extends Fragment implements StepUploadRecyclerViewAdapter.StepUploadListener {
     private static final int PICK_IMAGE_REQUEST = 71;
     private static final int IMAGE_CAPTURE_REQUEST = 72;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private View view;
     private List<Tag> tags;
     private List<String> ingredients;
@@ -68,13 +75,16 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
     private IngredientUploadRecyclerViewAdapter ingredientAdapter;
     private StepUploadRecyclerViewAdapter stepAdapter;
     private ImageView illustration;
+    private EditText title;
     private UploadViewModel model;
 
     //firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private UUID UUID;
+
     private String url;
+    private Uri uri;
 
     public UploadFragment() {
         // Required empty public constructor
@@ -156,7 +166,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         ingredientEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
         ingredientEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        EditText title = view.findViewById(R.id.editTextRecipeNameUploadFragment);
+        title = view.findViewById(R.id.editTextRecipeNameUploadFragment);
         title.setRawInputType(InputType.TYPE_CLASS_TEXT);
         title.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
@@ -195,6 +205,10 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         });
 
         illustration = view.findViewById(R.id.imageViewIllustrationAddingUploadFragment);
+
+        if(url != null)
+            Picasso.get().load(url).into(illustration);
+
         illustration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,27 +282,53 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
 
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        //file = image.getAbsolutePath();
+        return image;
+    }
+
     private void selectImage() {
-        final CharSequence[] options = { "Chụp từ máy ảnh", "Chọn hình từ thư viện ảnh","Hủy" };
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Đăng tải hình");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_select_image, null);
+
+        builder.setView(dialogView);
+        AlertDialog listener = builder.show();
+
+        TextView take = dialogView.findViewById(R.id.textViewTakeSelectImageDialog);
+        take.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Chụp từ máy ảnh"))
-                {
-                    takeImage();
-                }
-                else if (options[item].equals("Chọn hình từ thư viện ảnh"))
-                {
-                    chooseImage();
-                }
-                else if (options[item].equals("Hủy")) {
-                    dialog.dismiss();
-                }
+            public void onClick(View v) {
+                takeImage();
+                listener.dismiss();
             }
         });
-        builder.show();
+
+        TextView pick = dialogView.findViewById(R.id.textViewPickSelectImageDialog);
+        pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+                listener.dismiss();
+            }
+        });
+
+        TextView cancel = dialogView.findViewById(R.id.textViewCancelSelectImageDialog);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.dismiss();
+            }
+        });
     }
 
     private void chooseImage() {
@@ -300,8 +340,21 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
 
     private void takeImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity( getActivity().getPackageManager()) != null) {
-            startActivityForResult(intent, IMAGE_CAPTURE_REQUEST);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                uri = FileProvider.getUriForFile(getContext(),
+                        "com.adida.dailycook.fileprovider",
+                        photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+            }
         }
     }
 
@@ -313,10 +366,19 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
             uploadImage(data.getData());
         }
 
-        if (requestCode == IMAGE_CAPTURE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK
+                && data != null) {
             //here
-            uploadImage(data.getData());
+            uploadImage(uri);
         }
+    }
+
+    public Map<String, String> createRecipe() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("title", title.getText().toString());
+        map.put("illustration", url);
+
+        return map;
     }
 }

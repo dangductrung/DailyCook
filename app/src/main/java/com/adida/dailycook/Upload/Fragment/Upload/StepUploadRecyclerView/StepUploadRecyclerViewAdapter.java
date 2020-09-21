@@ -40,7 +40,7 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         final StepUploadModel model = list.get(position);
         holder.description.setText(model.getDescription());
-        holder.order.setText(Integer.toString(position));
+        holder.order.setText(Integer.toString(position + 1));
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

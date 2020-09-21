@@ -123,13 +123,16 @@ public class TagFragment extends Fragment implements ProvidedTagUploadRecyclerVi
 
                     dialog.dismiss();
                 }
-                else
+                else {
+                    dialog.dismiss();
                     Toast.makeText(requireContext(), "Không nhận được dữ liệu từ máy chủ", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
             @Override
             public void onFailure(Call<List<Tag>> call, Throwable t) {
+                dialog.dismiss();
                 Toast.makeText(requireContext(), "Không thể kết nối đến máy chủ", Toast.LENGTH_SHORT).show();
             }
         });

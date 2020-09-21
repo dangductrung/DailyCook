@@ -81,12 +81,12 @@ public class UploadViewModel extends ViewModel {
         this.steps.setValue(steps);
     }
 
-    public void addSteps(List<StepUploadModel> steps) {
+    public void addStep(StepUploadModel step) {
         List<StepUploadModel> set = this.steps.getValue();
         if (set == null) {
             set = new ArrayList<>();
         }
-        set.addAll(steps);
+        set.add(step);
         this.steps.setValue(set);
     }
 
