@@ -1,4 +1,4 @@
-package com.adida.dailycook.Main.Fragment.Home;
+package com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -12,8 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.adida.dailycook.Main.Fragment.Home.RecipeHomeRecyclerView.RecipeHomeRecyclerViewAdapter;
+import com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment.RecipeHomeRecyclerview.RecipeHomeRecyclerViewAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;

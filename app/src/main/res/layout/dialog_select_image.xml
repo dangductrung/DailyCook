@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@color/colorWhite"
+    android:padding="14dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textViewTakeSelectImageDialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_small_radius_all_blue"
+                android:backgroundTint="@color/colorPureWhite"
+                android:gravity="center_horizontal"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:text="Chụp từ ảnh" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/line"/>
+
+            <TextView
+                android:id="@+id/textViewPickSelectImageDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPureWhite"
+                android:paddingTop="4dp"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:text="Chọn từ thư viện ảnh"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardUseCompatPadding="true">
+        <TextView
+            android:id="@+id/textViewCancelSelectImageDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_small_radius_all_blue"
+            android:backgroundTint="@color/colorLightGray"
+            android:gravity="center_horizontal"
+            android:padding="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="Hủy"/>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

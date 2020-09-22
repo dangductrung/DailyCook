@@ -3,6 +3,8 @@
     package="com.adida.dailycook">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".SharedPreference.App"
@@ -12,7 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".recipeSteps.RecipeSteps"
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.adida.dailycook.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/image_path"></meta-data>
+        </provider>
+
+        <activity
+            android:name=".recipeSteps.RecipeSteps"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
         <activity android:name=".Main.MainActivity">
             <intent-filter>
@@ -21,12 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main.Fragment.Profile.ProfileFragment"/>
-
-        <activity android:name=".login.LoginPage">
-        </activity>
+        <activity android:name=".login.LoginPage"></activity>
         <activity android:name=".recipeDetail.RecipeDetailPage"></activity>
         <activity android:name=".register.RegisterPage"></activity>
+        <activity
+            android:name=".Upload.UploadActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
     </application>
 

@@ -1,6 +1,8 @@
 package com.adida.dailycook.SharedPreference;
 
 import android.app.Application;
+
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 
 public class App extends Application {

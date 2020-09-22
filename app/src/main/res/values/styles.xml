@@ -21,4 +21,11 @@
         <item name="titleTextColor">@color/colorWhite</item>
     </style>
 
+    <style name="SpotsDialog" parent="android:Theme.DeviceDefault.Light.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.DeviceDefault</item>
+        <item name="DialogTitleText">Loading…</item>
+        <item name="DialogSpotColor">@color/colorBlue</item>
+        <item name="DialogSpotCount">4</item>
+    </style>
+
 </resources>
