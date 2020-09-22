@@ -1,5 +1,6 @@
 package com.adida.dailycook.Upload;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +30,9 @@ import com.adida.dailycook.retrofit2.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
@@ -64,52 +67,25 @@ public class UploadActivity extends AppCompatActivity {
 
 
         frameLayout.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChildViewAdded(View parent, View child) {
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutUpload);
                 if (fragment instanceof UploadFragment) {
                     textView.setText("Đăng tải công thức");
-                    imageButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            finish();
-                        }
-                    });
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            upload();
-                        }
-                    });
+                    imageButton.setOnClickListener(v -> finish());
+                    button.setOnClickListener(v -> upload());
                 } else if (fragment instanceof TagFragment) {
                     textView.setText("Thêm thể loại");
-                    imageButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            model.setTags(new ArrayList<Tag>());
-                            getSupportFragmentManager().popBackStack();
-                        }
+                    imageButton.setOnClickListener(v -> {
+                        getOrigin();
+                        getSupportFragmentManager().popBackStack();
                     });
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getSupportFragmentManager().popBackStack();
-                        }
-                    });
+                    button.setOnClickListener(v -> getSupportFragmentManager().popBackStack());
                 } else if (fragment instanceof StepFragment) {
                     textView.setText("Thêm bước chế biến");
-                    imageButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getSupportFragmentManager().popBackStack();
-                        }
-                    });
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            createStep();
-                        }
-                    });
+                    imageButton.setOnClickListener(v -> getSupportFragmentManager().popBackStack());
+                    button.setOnClickListener(v -> createStep());
                 }
             }
 
@@ -133,6 +109,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private void createStep() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutUpload);
+        assert fragment != null;
         StepUploadModel step = ((StepFragment) fragment).createStep();
 
         if (!step.getDescription().isEmpty()) {
@@ -144,14 +121,23 @@ public class UploadActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng điền mô tả bước chế biến", Toast.LENGTH_SHORT).show();
     }
 
+    private void getOrigin() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutUpload);
+        assert fragment != null;
+        List<Tag> origin = ((TagFragment) fragment).getOrigin();
+
+        model.setTags(origin);
+    }
+
     private void upload() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutUpload);
+        assert fragment != null;
         Map<String, String> recipeForeground = ((UploadFragment) fragment).createRecipe();
 
 
         HashMap<String, Object> params = new HashMap<>();
 
-        if (recipeForeground.get("title").isEmpty()) {
+        if (Objects.requireNonNull(recipeForeground.get("title")).isEmpty()) {
             Toast.makeText(this, "Vui lòng điền tên công thức", Toast.LENGTH_SHORT).show();
             return;
         } else if (model.getTags().getValue() == null) {
@@ -206,12 +192,7 @@ public class UploadActivity extends AppCompatActivity {
                 getSupportFragmentManager().popBackStack();
 
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 1000);
+                handler.postDelayed(() -> finish(), 1000);
             }
 
             @Override
@@ -230,7 +211,7 @@ public class UploadActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
             finish();
         } else if (fragment instanceof TagFragment) {
-            model.setTags(new ArrayList<Tag>());
+            model.setTags(new ArrayList<>());
             getSupportFragmentManager().popBackStack();
         } else if (fragment instanceof StepFragment) {
             getSupportFragmentManager().popBackStack();

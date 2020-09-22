@@ -1,5 +1,6 @@
 package com.adida.dailycook.Upload.Fragment.Upload.StepUploadRecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         return new ItemViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
 
@@ -41,13 +43,10 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         final StepUploadModel model = list.get(position);
         holder.description.setText(model.getDescription());
         holder.order.setText(Integer.toString(position + 1));
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //list.remove(position);
-                //notifyDataSetChanged();
-                callback.removeStep(position);
-            }
+        holder.remove.setOnClickListener(view -> {
+            //list.remove(position);
+            //notifyDataSetChanged();
+            callback.removeStep(position);
         });
     }
 
@@ -57,7 +56,7 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     }
 
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView description;
         private TextView order;
         private ImageButton remove;
@@ -71,7 +70,7 @@ public class StepUploadRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public interface StepUploadListener {
-        public void removeStep(int index);
+        void removeStep(int index);
     }
 
     public void setOnShareClickedListener(StepUploadListener callback) {

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
-import com.adida.dailycook.Upload.Fragment.Tag.SelectedTagUploadRecyclerview.SelectedTagUploadRecyclerViewAdapter;
 import com.adida.dailycook.retrofit2.entities.Tag;
 
 import java.util.List;
@@ -39,12 +38,7 @@ public class ProvidedTagUploadRecyclerViewAdapter extends RecyclerView.Adapter<R
 
         final Tag model = list.get(position);
         holder.title.setText(model.getTitle());
-        holder.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.selectTag(list.get(position));
-            }
-        });
+        holder.imageButton.setOnClickListener(v -> callback.selectTag(list.get(position)));
     }
 
     @Override
@@ -52,7 +46,7 @@ public class ProvidedTagUploadRecyclerViewAdapter extends RecyclerView.Adapter<R
         return list == null ? 0 : list.size();
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageButton imageButton;
 
@@ -64,7 +58,7 @@ public class ProvidedTagUploadRecyclerViewAdapter extends RecyclerView.Adapter<R
     }
 
     public interface ProvidedTagUploadListener {
-        public void selectTag(Tag tag);
+        void selectTag(Tag tag);
     }
 
     public void setOnShareClickedListener(ProvidedTagUploadRecyclerViewAdapter.ProvidedTagUploadListener callback) {

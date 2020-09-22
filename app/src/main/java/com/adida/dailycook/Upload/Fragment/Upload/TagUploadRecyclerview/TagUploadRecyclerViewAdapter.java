@@ -43,7 +43,7 @@ public class TagUploadRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         return list == null ? 0 : list.size();
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
 
         public ItemViewHolder(@NonNull View itemView) {

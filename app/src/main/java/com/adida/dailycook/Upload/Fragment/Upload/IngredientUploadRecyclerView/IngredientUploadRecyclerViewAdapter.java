@@ -39,12 +39,9 @@ public class IngredientUploadRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
         final String model = list.get(position);
         holder.description.setText(model);
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                list.remove(position);
-                notifyDataSetChanged();
-            }
+        holder.remove.setOnClickListener(view -> {
+            list.remove(position);
+            notifyDataSetChanged();
         });
     }
 
@@ -54,7 +51,7 @@ public class IngredientUploadRecyclerViewAdapter extends RecyclerView.Adapter<Re
     }
 
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView description;
         private ImageButton remove;
 

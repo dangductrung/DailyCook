@@ -3,7 +3,6 @@ package com.adida.dailycook.Upload.Fragment.Upload;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,12 +39,8 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -59,15 +52,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
 public class UploadFragment extends Fragment implements StepUploadRecyclerViewAdapter.StepUploadListener {
     private static final int PICK_IMAGE_REQUEST = 71;
-    private static final int IMAGE_CAPTURE_REQUEST = 72;
     private static final int REQUEST_TAKE_PHOTO = 1;
-    private View view;
     private List<Tag> tags;
     private List<String> ingredients;
     private List<StepUploadModel> steps;
@@ -78,10 +68,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
     private EditText title;
     private UploadViewModel model;
 
-    //firebase
-    private FirebaseStorage storage;
     private StorageReference storageReference;
-    private UUID UUID;
 
     private String url;
     private Uri uri;
@@ -106,14 +93,15 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_upload, container, false);
+        View view = inflater.inflate(R.layout.fragment_upload, container, false);
 
-        storage = FirebaseStorage.getInstance();
+        //firebase
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        RecyclerView tagRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewTagUploadFragment);
-        RecyclerView ingredientRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewIngredientUploadFragment);
-        RecyclerView stepRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewStepUploadFragment);
+        RecyclerView tagRecyclerView = view.findViewById(R.id.recyclerViewTagUploadFragment);
+        RecyclerView ingredientRecyclerView = view.findViewById(R.id.recyclerViewIngredientUploadFragment);
+        RecyclerView stepRecyclerView = view.findViewById(R.id.recyclerViewStepUploadFragment);
 
         FlexboxLayoutManager tagLayoutManager = new FlexboxLayoutManager(getContext());
         tagLayoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -126,31 +114,22 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         steps = new ArrayList<>();
 
         model = new ViewModelProvider(requireActivity()).get(UploadViewModel.class);
-        model.getTags().observe(getViewLifecycleOwner(), new Observer<List<Tag>>() {
-            @Override
-            public void onChanged(List<Tag> data) {
-                tags.clear();
-                tags.addAll(data);
-                tagAdapter.notifyDataSetChanged();
-            }
+        model.getTags().observe(getViewLifecycleOwner(), data -> {
+            tags.clear();
+            tags.addAll(data);
+            tagAdapter.notifyDataSetChanged();
         });
 
-        model.getIngredients().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> data) {
-                ingredients.clear();
-                ingredients.addAll(data);
-                ingredientAdapter.notifyDataSetChanged();
-            }
+        model.getIngredients().observe(getViewLifecycleOwner(), data -> {
+            ingredients.clear();
+            ingredients.addAll(data);
+            ingredientAdapter.notifyDataSetChanged();
         });
 
-        model.getSteps().observe(getViewLifecycleOwner(), new Observer<List<StepUploadModel>>() {
-            @Override
-            public void onChanged(List<StepUploadModel> data) {
-                steps.clear();
-                steps.addAll(data);
-                stepAdapter.notifyDataSetChanged();
-            }
+        model.getSteps().observe(getViewLifecycleOwner(), data -> {
+            steps.clear();
+            steps.addAll(data);
+            stepAdapter.notifyDataSetChanged();
         });
 
         tagAdapter = new TagUploadRecyclerViewAdapter(requireActivity(), tags);
@@ -171,37 +150,26 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         title.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         Button tagButton = view.findViewById(R.id.buttonTagAddingUploadFragment);
-        tagButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFragment(new TagFragment());
-            }
-        });
+        tagButton.setOnClickListener(v -> loadFragment(new TagFragment()));
 
         ImageButton ingredientButton = view.findViewById(R.id.imageButtonIngredientAddingUploadFragment);
-        ingredientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!ingredientEditText.getText().toString().isEmpty()) {
-                    model.addIngredient(ingredientEditText.getText().toString());
-                    stepAdapter.notifyDataSetChanged();
-                    ingredientEditText.setText("");
-                }
+        ingredientButton.setOnClickListener(v -> {
+            if (!ingredientEditText.getText().toString().isEmpty()) {
+                model.addIngredient(ingredientEditText.getText().toString());
+                stepAdapter.notifyDataSetChanged();
+                ingredientEditText.setText("");
             }
         });
 
         Button stepButton = view.findViewById(R.id.buttonStepAddingUploadFragment);
-        stepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //List<StepUploadModel> sub = new ArrayList<StepUploadModel>();
-                //StepUploadModel temp = new StepUploadModel();
-                //temp.setDescription("Hello World");
-                //sub.add(temp);
-                //model.addSteps(sub);
-                //stepAdapter.notifyDataSetChanged();
-                loadFragment(new StepFragment());
-            }
+        stepButton.setOnClickListener(v -> {
+            //List<StepUploadModel> sub = new ArrayList<StepUploadModel>();
+            //StepUploadModel temp = new StepUploadModel();
+            //temp.setDescription("Hello World");
+            //sub.add(temp);
+            //model.addSteps(sub);
+            //stepAdapter.notifyDataSetChanged();
+            loadFragment(new StepFragment());
         });
 
         illustration = view.findViewById(R.id.imageViewIllustrationAddingUploadFragment);
@@ -209,12 +177,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         if(url != null)
             Picasso.get().load(url).into(illustration);
 
-        illustration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        illustration.setOnClickListener(v -> selectImage());
 
         return view;
     }
@@ -238,44 +201,28 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
             progressDialog.setTitle("Đang tải hình...");
             progressDialog.show();
 
-            UUID = java.util.UUID.randomUUID();
+            java.util.UUID UUID = java.util.UUID.randomUUID();
 
             final StorageReference ref = storageReference.child("images/" + UUID.toString());
             ref.putFile(uri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                        //url of img on firebase
+                        url = String.valueOf(uri1);
 
+                        Picasso.get().load(url).into(illustration);
 
-                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    //url of img on firebase
-                                    url = String.valueOf(uri);
+                        progressDialog.dismiss();
 
-                                    Picasso.get().load(url).into(illustration);
-
-                                    progressDialog.dismiss();
-
-                                    Toast.makeText(getContext(), "Tải hình thành công", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                        Toast.makeText(getContext(), "Tải hình thành công", Toast.LENGTH_SHORT).show();
+                    }))
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Tải hình thất bại ", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(getContext(), "Tải hình thất bại ", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Đã tải " + (int) progress + "%");
-                        }
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                .getTotalByteCount());
+                        progressDialog.setMessage("Đã tải " + (int) progress + "%");
                     });
 
         }
@@ -283,17 +230,16 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        File storageDir = Objects.requireNonNull(getContext()).getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        //file = image.getAbsolutePath();
+        return File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
-        //file = image.getAbsolutePath();
-        return image;
     }
 
     private void selectImage() {
@@ -305,30 +251,19 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         AlertDialog listener = builder.show();
 
         TextView take = dialogView.findViewById(R.id.textViewTakeSelectImageDialog);
-        take.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takeImage();
-                listener.dismiss();
-            }
+        take.setOnClickListener(v -> {
+            takeImage();
+            listener.dismiss();
         });
 
         TextView pick = dialogView.findViewById(R.id.textViewPickSelectImageDialog);
-        pick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-                listener.dismiss();
-            }
+        pick.setOnClickListener(v -> {
+            chooseImage();
+            listener.dismiss();
         });
 
         TextView cancel = dialogView.findViewById(R.id.textViewCancelSelectImageDialog);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.dismiss();
-            }
-        });
+        cancel.setOnClickListener(v -> listener.dismiss());
     }
 
     private void chooseImage() {
@@ -340,7 +275,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
 
     private void takeImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -349,7 +284,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                uri = FileProvider.getUriForFile(getContext(),
+                uri = FileProvider.getUriForFile(Objects.requireNonNull(getContext()),
                         "com.adida.dailycook.fileprovider",
                         photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);

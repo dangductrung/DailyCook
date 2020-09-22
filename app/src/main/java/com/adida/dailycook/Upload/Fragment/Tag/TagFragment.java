@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +33,7 @@ import retrofit2.Response;
 public class TagFragment extends Fragment implements ProvidedTagUploadRecyclerViewAdapter.ProvidedTagUploadListener, SelectedTagUploadRecyclerViewAdapter.SelectedTagUploadListener {
     private List<Tag> provided;
     private List<Tag> selected;
+    private List<Tag> origin;
     private ProvidedTagUploadRecyclerViewAdapter providedTagUploadRecyclerViewAdapter;
     private SelectedTagUploadRecyclerViewAdapter selectedTagUploadRecyclerViewAdapter;
     private UploadViewModel model;
@@ -82,16 +82,17 @@ public class TagFragment extends Fragment implements ProvidedTagUploadRecyclerVi
 
         provided = new ArrayList<>();
         selected = new ArrayList<>();
+        origin = new ArrayList<>();
 
         model = new ViewModelProvider(requireActivity()).get(UploadViewModel.class);
-        model.getTags().observe(getViewLifecycleOwner(), new Observer<List<Tag>>() {
-            @Override
-            public void onChanged(List<Tag> data) {
-                selected.clear();
-                selected.addAll(data);
-                selectedTagUploadRecyclerViewAdapter.notifyDataSetChanged();
-            }
+        model.getTags().observe(getViewLifecycleOwner(), data -> {
+            selected.clear();
+            selected.addAll(data);
+            selectedTagUploadRecyclerViewAdapter.notifyDataSetChanged();
         });
+
+        if(model.getTags().getValue() != null)
+            origin.addAll(model.getTags().getValue());
 
         providedTagUploadRecyclerViewAdapter = new ProvidedTagUploadRecyclerViewAdapter(requireActivity(), provided);
         selectedTagUploadRecyclerViewAdapter = new SelectedTagUploadRecyclerViewAdapter(requireActivity(), selected);
@@ -151,4 +152,6 @@ public class TagFragment extends Fragment implements ProvidedTagUploadRecyclerVi
         model.removeTag(tag);
         providedTagUploadRecyclerViewAdapter.notifyDataSetChanged();
     }
+
+    public List<Tag> getOrigin() {return this.origin;}
 }

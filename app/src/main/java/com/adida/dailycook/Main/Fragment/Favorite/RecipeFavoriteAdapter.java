@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adida.dailycook.Main.Fragment.Home.RecipeHomeRecyclerView.RecipeHomeRecyclerViewAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.recipeDetail.RecipeDetailPage;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;

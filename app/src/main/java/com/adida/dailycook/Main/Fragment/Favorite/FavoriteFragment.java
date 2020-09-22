@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.adida.dailycook.Main.Fragment.Home.RecipeHomeRecyclerView.RecipeHomeRecyclerViewAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
