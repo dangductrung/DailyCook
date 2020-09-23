@@ -1,6 +1,7 @@
 package com.adida.dailycook.recipeSteps;
 
 import android.content.Context;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class CustomPagerAdapter extends PagerAdapter {
 
         TextView txtDescription = layout.findViewById(R.id.stepDescription);
         txtDescription.setText(step.getStep_description());
+        txtDescription.setMovementMethod(new ScrollingMovementMethod());
 
         ImageView imgStepImg = layout.findViewById(R.id.stepImage);
         imgStepImg.setScaleType(ImageView.ScaleType.FIT_XY);

@@ -5,9 +5,10 @@ import android.annotation.SuppressLint;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Tag {
+public class Tag implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;
