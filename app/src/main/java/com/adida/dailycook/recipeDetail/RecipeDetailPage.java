@@ -25,7 +25,10 @@ import com.adida.dailycook.recipeSteps.RecipeSteps;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 import com.adida.dailycook.retrofit2.entities.RecipeDetailSteps;
+import com.adida.dailycook.retrofit2.entities.RecipeStep;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

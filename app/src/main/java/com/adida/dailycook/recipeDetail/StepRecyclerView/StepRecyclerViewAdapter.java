@@ -34,8 +34,12 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeStep model = models.get(position);
 
-        holder.orderTextView.setText(Integer.toString(model.getStep_Order()));
-        holder.descriptionTextView.setText(model.getStep_description());
+        holder.orderTextView.setText(Integer.toString(model.getStep_Order() + 1));
+        String[] strs = model.getStep_description().split("[.\\:\\,]");
+        holder.descriptionTextView.setText(strs[0]+"...");
+
+
+        //holder.descriptionTextView.setText(model.getStep_description());
     }
 
     @Override
