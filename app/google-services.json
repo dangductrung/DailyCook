@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "227227659484",
+    "firebase_url": "https://cookdail.firebaseio.com",
+    "project_id": "cookdail",
+    "storage_bucket": "cookdail.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227227659484:android:76ed3a94f6872fb7f5d819",
+        "android_client_info": {
+          "package_name": "com.adida.dailycook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227227659484-dkib598sdip8qpj500077id0qpv2cp9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADil9F2u4f8dd5oAjM7Y6pQ0H6-UqdfOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "227227659484-dkib598sdip8qpj500077id0qpv2cp9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

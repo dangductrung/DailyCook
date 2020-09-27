@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">dailycook</string>
+    <string name="login_hint_username_text">Email</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="red">Hello blank fragment</string>
+    <string name="green">Hello blank fragment</string>
+    <string name="blue">Hello blank fragment</string>
+    <string name="login_hint_password_text">Mật khẩu</string>
 </resources>

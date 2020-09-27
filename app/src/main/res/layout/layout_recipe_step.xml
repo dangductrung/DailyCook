@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_marginBottom="100px"
+        android:paddingLeft="75px"
+        android:paddingRight="75px"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/stepImage"/>
+
+    <TextView
+        android:textSize="23dp"
+        android:paddingHorizontal="40dp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:layout_below="@+id/stepImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars = "vertical"
+        android:id="@+id/stepDescription" />
+</RelativeLayout>
