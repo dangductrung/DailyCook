@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment.RecipeHomeRecyclerview.RecipeHomeRecyclerViewAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
@@ -19,6 +21,8 @@ import com.adida.dailycook.config.Config;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,9 +76,12 @@ public class RecipeHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.recipehome_fragment, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewRecipeHomepage);
+        if (itemList == null)
+            itemList = new ArrayList<>();
+        recyclerView = view.findViewById(R.id.recyclerViewRecipeHomepage);
+        recyclerViewAdapter = new RecipeHomeRecyclerViewAdapter(getActivity(), itemList);
+        recyclerView.setAdapter(recyclerViewAdapter);
         getHomeData();
         return view;
     }
@@ -84,24 +91,21 @@ public class RecipeHomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<List<RecipeDetail>> call, Response<List<RecipeDetail>> response) {
-                if (page == 0) {
-                    itemList = response.body();
-                    initScrollListener();
-
-                    setRecipeHomeAdapter();
-                } else {
-                    if (response.body() != null) {
+                if (response.body() != null) {
+                    if (page == 0) {
                         itemList.addAll(response.body());
                         recyclerViewAdapter.notifyDataSetChanged();
-                        isItemLoading = false;
+                        initScrollListener();
+                    } else {
+                        if (response.body() != null) {
+                            itemList.addAll(response.body());
+                            recyclerViewAdapter.notifyDataSetChanged();
+                            isItemLoading = false;
+                        }
                     }
-                }
-
-                if (response.body() == null) {
-                    recyclerView.clearOnScrollListeners();
-                } else {
                     page += 1;
-                }
+                } else
+                    recyclerView.clearOnScrollListeners();
             }
 
             @Override
@@ -111,10 +115,6 @@ public class RecipeHomeFragment extends Fragment {
         });
     }
 
-    private void setRecipeHomeAdapter() {
-        recyclerViewAdapter = new RecipeHomeRecyclerViewAdapter(getActivity(), itemList);
-        recyclerView.setAdapter(recyclerViewAdapter);
-    }
 
     private void initScrollListener() {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -145,14 +145,11 @@ public class RecipeHomeFragment extends Fragment {
         recyclerViewAdapter.notifyItemInserted(itemList.size() - 1);
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                itemList.remove(itemList.size() - 1);
-                recyclerViewAdapter.notifyItemRemoved(itemList.size());
+        handler.postDelayed(() -> {
+            itemList.remove(itemList.size() - 1);
+            recyclerViewAdapter.notifyItemRemoved(itemList.size());
 
-                getHomeData();
-            }
+            getHomeData();
         }, 2000);
     }
 }

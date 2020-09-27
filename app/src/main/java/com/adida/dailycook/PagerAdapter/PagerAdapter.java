@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.adida.dailycook.Main.Fragment.Home.RecipeHomeFragment.RecipeHomeFragment;
 import com.adida.dailycook.R;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     private final List<Integer> mFragmentIconList = new ArrayList<>();
     private Context context;
     public PagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
     }
 

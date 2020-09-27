@@ -7,11 +7,6 @@
         android:title="Trang chủ" />
 
     <item
-        android:id="@+id/navigation_dinning"
-        android:icon="@drawable/ic_dinning"
-        android:title="Khám phá" />
-
-    <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search"
         android:title="Tìm kiếm" />

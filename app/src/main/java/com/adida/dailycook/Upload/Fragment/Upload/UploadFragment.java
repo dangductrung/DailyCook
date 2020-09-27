@@ -66,6 +66,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
     private StepUploadRecyclerViewAdapter stepAdapter;
     private ImageView illustration;
     private EditText title;
+    private EditText description;
     private UploadViewModel model;
 
     private StorageReference storageReference;
@@ -148,6 +149,10 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         title = view.findViewById(R.id.editTextRecipeNameUploadFragment);
         title.setRawInputType(InputType.TYPE_CLASS_TEXT);
         title.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        description = view.findViewById(R.id.editTextDescriptionUploadFragment);
+        description.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        description.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         Button tagButton = view.findViewById(R.id.buttonTagAddingUploadFragment);
         tagButton.setOnClickListener(v -> loadFragment(new TagFragment()));
@@ -312,6 +317,7 @@ public class UploadFragment extends Fragment implements StepUploadRecyclerViewAd
         Map<String, String> map = new HashMap<>();
 
         map.put("title", title.getText().toString());
+        map.put("description", description.getText().toString());
         map.put("illustration", url);
 
         return map;

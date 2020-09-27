@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -18,10 +19,17 @@ import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
 import com.adida.dailycook.login.LoginPage;
+import com.adida.dailycook.retrofit2.ServiceManager;
+import com.adida.dailycook.retrofit2.entities.Tag;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
     private View view;
@@ -60,7 +68,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).clear();
-                startActivity(new Intent(getActivity(), LoginPage.class));
+                Intent intent = new Intent(getActivity(), LoginPage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 getActivity().finish();
             }
         });
@@ -96,29 +106,37 @@ public class HomeFragment extends Fragment {
 
     private void setView() {
         pagerAdapter = new PagerAdapter(getActivity().getSupportFragmentManager(), getContext());
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Soup");
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Đồ chiên");
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Đồ Hàn");
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Đồ Âu");
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Đồ Á");
-        pagerAdapter.addFragment(new RecipeHomeFragment(), "Đồ Pháp");
 
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        highLightCurrentTab(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        ServiceManager.getInstance().getTagService().getAllTags().enqueue(new Callback<List<Tag>>() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
+                for (Tag tag: response.body()) {
+                    pagerAdapter.addFragment(new RecipeHomeFragment(), tag.getTitle());
+                }
+                viewPager.setAdapter(pagerAdapter);
+                tabLayout.setupWithViewPager(viewPager);
+                highLightCurrentTab(0);
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        highLightCurrentTab(position);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                    }
+                });
             }
 
             @Override
-            public void onPageSelected(int position) {
-                highLightCurrentTab(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onFailure(Call<List<Tag>> call, Throwable t) {
+                Toast.makeText(getContext(), "Không thể kết nối đến máy chủ", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }

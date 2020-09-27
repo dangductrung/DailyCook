@@ -1,5 +1,6 @@
 package com.adida.dailycook.Main.Fragment.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
+import com.adida.dailycook.Upload.UploadActivity;
 import com.adida.dailycook.config.Config;
+import com.adida.dailycook.login.LoginPage;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.Recipe;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
@@ -77,7 +80,7 @@ public class ProfileFragment extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //
+                startActivity( new Intent(getActivity(), UploadActivity.class));
                 return false;
             }
         });

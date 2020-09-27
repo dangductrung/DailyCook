@@ -132,12 +132,12 @@ public class UploadActivity extends AppCompatActivity {
     private void upload() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutUpload);
         assert fragment != null;
-        Map<String, String> recipeForeground = ((UploadFragment) fragment).createRecipe();
+        Map<String, String> recipeInfo = ((UploadFragment) fragment).createRecipe();
 
 
         HashMap<String, Object> params = new HashMap<>();
 
-        if (Objects.requireNonNull(recipeForeground.get("title")).isEmpty()) {
+        if (Objects.requireNonNull(recipeInfo.get("title")).isEmpty()) {
             Toast.makeText(this, "Vui lòng điền tên công thức", Toast.LENGTH_SHORT).show();
             return;
         } else if (model.getTags().getValue() == null) {
@@ -146,7 +146,7 @@ public class UploadActivity extends AppCompatActivity {
         } else if (model.getIngredients().getValue() == null) {
             Toast.makeText(this, "Vui lòng thêm nguyên liệu", Toast.LENGTH_SHORT).show();
             return;
-        } else if (recipeForeground.get("illustration") == null) {
+        } else if (recipeInfo.get("illustration") == null) {
             Toast.makeText(this, "Vui lòng chọn hình ảnh minh họa", Toast.LENGTH_SHORT).show();
             return;
         } else if (model.getSteps().getValue() == null) {
@@ -170,10 +170,10 @@ public class UploadActivity extends AppCompatActivity {
         for (Tag element : model.getTags().getValue())
             tags.add(element.getTitle());
 
-        params.put("recipe_name", recipeForeground.get("title"));
+        params.put("recipe_name", recipeInfo.get("title"));
         params.put("user_id", SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).get(Config.SHARED_PREFERENCES.USER.ID, Integer.class));
-        params.put("recipe_description", "");
-        params.put("image_url", recipeForeground.get("illustration"));
+        params.put("recipe_description", recipeInfo.get("description"));
+        params.put("image_url", recipeInfo.get("illustration"));
         params.put("recipe_time", totalTime);
         params.put("recipeSteps", steps);
         params.put("recipeIngredients", model.getIngredients().getValue());

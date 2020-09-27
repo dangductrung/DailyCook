@@ -39,6 +39,55 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardUseCompatPadding="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            card_view:contentPadding="10dp">
+            <TextView
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giới thiệu:"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:gravity="start"
+                android:inputType="text" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardUseCompatPadding="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            card_view:contentPadding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null">
+
+                <EditText
+                    android:id="@+id/editTextDescriptionUploadFragment"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="start"
+                    android:layout_gravity="start"
+                    android:background="@android:color/transparent"
+                    android:hint="Giới thiệu công thức"
+                    android:maxLength="300"
+                    tools:ignore="Autofill,HardcodedText,UnusedAttribute" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             card_view:cardCornerRadius="5dp"
             card_view:cardUseCompatPadding="true"
