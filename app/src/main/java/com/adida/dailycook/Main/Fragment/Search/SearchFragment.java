@@ -194,7 +194,11 @@ public class SearchFragment extends Fragment {
 
     public void loadMore() {
         recipeList.add(null);
-        recyclerViewAdapter.notifyItemInserted(recipeList.size() - 1);
+        recyclerView.post(new Runnable() {
+            public void run() {
+                recyclerViewAdapter.notifyItemInserted(recipeList.size() - 1);
+            }
+        });
 
         Handler handler = new Handler();
         handler.postDelayed(this::LoadData, 2000);

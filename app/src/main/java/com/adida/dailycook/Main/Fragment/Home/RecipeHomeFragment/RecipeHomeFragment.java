@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +20,6 @@ import com.adida.dailycook.config.Config;
 import com.adida.dailycook.retrofit2.ServiceManager;
 import com.adida.dailycook.retrofit2.entities.RecipeDetail;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,11 +95,9 @@ public class RecipeHomeFragment extends Fragment {
                         recyclerViewAdapter.notifyDataSetChanged();
                         initScrollListener();
                     } else {
-                        if (response.body() != null) {
-                            itemList.addAll(response.body());
-                            recyclerViewAdapter.notifyDataSetChanged();
-                            isItemLoading = false;
-                        }
+                        itemList.addAll(response.body());
+                        recyclerViewAdapter.notifyDataSetChanged();
+                        isItemLoading = false;
                     }
                     page += 1;
                 } else
@@ -142,13 +138,14 @@ public class RecipeHomeFragment extends Fragment {
 
     public void loadMore() {
         itemList.add(null);
-        recyclerViewAdapter.notifyItemInserted(itemList.size() - 1);
+        recyclerView.post(new Runnable() {
+            public void run() {
+                recyclerViewAdapter.notifyItemInserted(itemList.size() - 1);
+            }
+        });
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            itemList.remove(itemList.size() - 1);
-            recyclerViewAdapter.notifyItemRemoved(itemList.size());
-
             getHomeData();
         }, 2000);
     }
