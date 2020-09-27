@@ -1,14 +1,18 @@
 package com.adida.dailycook.recipeDetail;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -16,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adida.dailycook.Main.Fragment.Favorite.RecipeFavoriteAdapter;
 import com.adida.dailycook.R;
 import com.adida.dailycook.SharedPreference.SharedPreference;
 import com.adida.dailycook.config.Config;
@@ -29,6 +34,8 @@ import com.adida.dailycook.retrofit2.entities.RecipeStep;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +50,8 @@ public class RecipeDetailPage extends AppCompatActivity {
     Button startButton;
     RecipeDetailSteps detail;
     ProgressDialog progressDialog;
+
+    Boolean favorite = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +77,6 @@ public class RecipeDetailPage extends AppCompatActivity {
     }
 
     private void setVariable() {
-
     }
 
     private void addAction() {
@@ -94,12 +102,57 @@ public class RecipeDetailPage extends AppCompatActivity {
         });
     }
 
+    private void updateRecipe(){
+        HashMap<String, Object> params = new HashMap<>();
+
+        params.put("user_id", SharedPreference.getInstance(Config.SHARED_PREFERENCES.USER.SP_NAME).get(Config.SHARED_PREFERENCES.USER.ID, Integer.class));
+        params.put("recipe_id", detail.getRecipe().getRecipeId());
+
+        if (favorite == true) {
+            ServiceManager.getInstance().getFavoriteService().addToFavorite(params).enqueue(new Callback<Map<String, String>>() {
+
+                @Override
+                public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Không thể kết nối đến máy chủ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            ServiceManager.getInstance().getFavoriteService().delete(params).enqueue(new Callback<Map<String, String>>() {
+
+                @Override
+                public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                }
+
+                @Override
+                public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Không thể kết nối đến máy chủ", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
     // Action
     private void didTapBackButton() {
         finish();
     }
 
     private void didTapLikeButton() {
+        favorite = !favorite;
+
+        if (favorite == true) {
+            likeButton.setBackgroundResource(R.mipmap.like_button);
+        } else {
+            likeButton.setBackgroundResource(R.mipmap.nolike_button);
+        }
+
+        updateRecipe();
+
     }
 
     private void didTapStartButton() {
@@ -129,6 +182,13 @@ public class RecipeDetailPage extends AppCompatActivity {
                     stepRecipeDetail.setLayoutManager(new LinearLayoutManager(getApplicationContext().getApplicationContext()));
 
                     descriptionRecipe.setText(detail.getRecipe().getDescription());
+
+                    favorite = detail.getFavorite();
+                    if (favorite == true) {
+                        likeButton.setBackgroundResource(R.mipmap.like_button);
+                    } else {
+                        likeButton.setBackgroundResource(R.mipmap.nolike_button);
+                    }
 
                     progressDialog.dismiss();
                 }

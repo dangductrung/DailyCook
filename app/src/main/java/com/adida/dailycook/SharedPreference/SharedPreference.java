@@ -53,4 +53,5 @@ public class SharedPreference {
     public void clear() {
         sharedPreferences.edit().clear().apply();
     }
+
 }
