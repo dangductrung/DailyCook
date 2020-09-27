@@ -160,6 +160,7 @@ public class RecipeSteps extends AppCompatActivity {
             //If turned On
             IsVoiceOn = true;
             isSuccess = true;
+            textToSpeech.stop();
             btnStepVoice.setText("VOICE");
         }
 
